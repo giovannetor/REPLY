@@ -8,7 +8,6 @@ import type {
   SourceReference,
 } from '../domain/learning';
 import type { AdaptiveChallengeBank } from '../domain/gameDirector';
-import { C2_CONTENT_PACK } from './coursePackAdapter';
 
 /**
  * The only source available for this slice is a one-page framework summary.
@@ -96,7 +95,6 @@ export const MOTORI_COURSE: Course = {
 };
 
 export const MOTORI_RUBRICS: Record<string, EvaluationRubric> = {
-  ...C2_CONTENT_PACK.rubrics,
   'c1-diagnostic-rubric': {
     id: 'c1-diagnostic-rubric',
     conceptId: 'C1',
@@ -353,7 +351,7 @@ export const DIAGNOSTIC_QUESTIONS: DiagnosticQuestion[] = [
     sourceRefs: TOPIC_SOURCES,
     answerSourceRefs: NO_ANSWER_SOURCES,
   },
-  C2_CONTENT_PACK.diagnostics.Q_D2 ?? {
+  {
     id: 'diagnostic-c2-subcritical-intake',
     conceptId: 'C2',
     order: 2,
@@ -465,7 +463,7 @@ export const BOSS_ROUNDS: BossRound[] = [
 export const ADAPTIVE_BANKS: AdaptiveChallengeBank = {
   C2: [
     {
-      challengeId: C2_CONTENT_PACK.challenges.Q_A2?.id ?? 'c2-advanced-intake-matching',
+      challengeId: 'c2-advanced-intake-matching',
       conceptId: 'C2',
       kind: 'advanced',
     },
@@ -475,7 +473,7 @@ export const ADAPTIVE_BANKS: AdaptiveChallengeBank = {
       kind: 'counterexample',
     },
     {
-      challengeId: C2_CONTENT_PACK.challenges.Q_R1?.id ?? 'c2-remedial-mass-flow',
+      challengeId: 'c2-remedial-mass-flow',
       conceptId: 'C2',
       kind: 'remedial',
     },
@@ -483,7 +481,6 @@ export const ADAPTIVE_BANKS: AdaptiveChallengeBank = {
 };
 
 export const LEARNING_CHALLENGES: Record<string, LearningChallenge> = {
-  ...C2_CONTENT_PACK.learning,
   'c1-stream-force': {
     challengeId: 'c1-stream-force',
     conceptId: 'C1',

@@ -11,23 +11,26 @@ around them:
 - evidence-based, explicitly provisional skill tracking,
 - a three-phase boss built from structured `BossRound` data,
 - source-status reporting, including missing answer sources,
-- a server-side Gemini evaluation adapter with strict validation and a labelled
+- an optional server-side AI evaluation adapter with strict validation and a labelled
   mock fallback.
 
 ## Content status: provisional and unverified
 
-The C2 content pack is imported from
-`Content/Courses/motori-aeromobili/motori_aeromobili_c2_content_pack.json` through
-`src/content/coursePackAdapter.ts`. Eight compatible questions retain their original IDs,
-answer/distractor text, misconceptions, all hints, rubric levels, source pages and pack status.
-`Q_R2` and `Q_A1` are excluded because they need review.
+The only source used for this slice is a **one-page framework summary**
+(`Motori per Aeromobili — Course Assessment Framework`, p. 1). It names the C1–C5 concepts,
+diagnostic themes and boss-round themes. It does **not** contain verified question text,
+answers, rubrics, slide references or citations.
 
-The pack's `SUPPORTED` status is **a Gemini-generated claim**, not independent verification.
-All imported source references have `verified: false`, all rubrics remain provisional, and
-metadata retains `independentlyVerified: false`. The original PDF is not in this repository.
-C1/C3 and the retained counterexample remain authored prototype content with missing answer
-sources. The framework summary supports topic names only. Mastery estimates are provisional,
-not official grades.
+Consequently:
+
+- every diagnostic question, challenge, answer and rubric in this repository is **authored
+  prototype content**, not verified course material;
+- every rubric is marked `provisional: true`;
+- topic references point only to the framework summary and are labelled **topic only**;
+- answer-source lists are intentionally empty, and the UI reports **No answer source**;
+- mastery values are estimates and are always labelled **provisional** — they are not grades.
+
+Do not present this prototype's content or mastery values as official assessment material.
 
 ## Playable path
 
@@ -66,14 +69,14 @@ is never routed to C5 or any other unrelated concept.
 
 ## Adaptive C2 routing
 
-`src/domain/gameDirector.ts` maps the diagnostic **Q_D2** evidence to a route:
+`src/domain/gameDirector.ts` maps the diagnostic evidence to a route:
 
 | Diagnostic evidence | Route | Challenge |
 | --- | --- | --- |
-| Correct answer + sound reasoning | Advanced | `Q_A2` |
+| Correct answer + sound reasoning | Advanced | `c2-advanced-intake-matching` |
 | Correct answer + flawed reasoning | Counterexample | `c2-counterexample-shock-position` |
-| Wrong answer | Remedial | `Q_R1` |
-| Correct option + uncertain evaluation | Clarification question | No challenge yet |
+| Wrong answer | Remedial | `c2-remedial-mass-flow` |
+| Uncertain evaluation | Clarification question | No challenge yet |
 
 If the evaluation is still uncertain after the clarification, the director falls back to the
 remedial challenge with `allowClarification: false`, so the run always continues. Every
@@ -87,9 +90,6 @@ the bank's concept, and the C2 bank contains all three route kinds.
 | 1 | C2 | Multiple choice — total-pressure recovery vs adiabatic efficiency | `boss-intake-pressure-recovery` |
 | 2 | C3 | True/false — combustor air partitioning | `boss-combustor-partitioning` |
 | 3 | C2 | Sequence — off-design intake/engine mismatch | `boss-intake-offdesign-mismatch` |
-
-The original boss formats and questions are retained, including the sequence round. Pack
-boss questions are imported and available through the provider, but do not replace this demo.
 
 The boss data is structured as `BossRound` records in
 `src/content/motoriFramework.ts`; the existing boss arena and challenge panel render the
@@ -123,11 +123,11 @@ game genres are explicitly out of scope for this slice.
 ## Setup and run
 
 The frontend requires Node 20+ **or** Bun 1.2+. The evaluation server requires Bun.
-This workspace was verified with Bun 1.4.4 and Node 24.22.1.
+This workspace was verified with Bun 1.3.13.
 
 ```bash
 # with Bun (recommended in this environment)
-bun install --frozen-lockfile
+bun install
 bun run dev
 ```
 
@@ -149,67 +149,52 @@ Open the URL printed by Vite (default: <http://localhost:5173>).
 | `bun run build` | typecheck + production build into `dist/` |
 | `bun run preview` | preview the production build |
 | `bun run server` | Bun evaluation adapter on port 8787 by default |
-| `bun run verify:ai` | Verify one real provider response; fails explicitly without a key |
 
 ## Evaluation adapter
 
-The browser calls `/api/evaluate` by default. Vite dev and preview proxy that path to
-`http://localhost:8787/evaluate`. The Bun server calls Google's OpenAI-compatible Gemini
-endpoint; no credential is sent to the browser. Only a validated successful provider
-response receives **AI evaluator**. A missing key, stopped backend, timeout or invalid output
-produces **Mock fallback (AI unavailable)** with a reason. For explicit offline mode open
-<http://localhost:5173/?mockEvaluation=1>, labelled **Mock evaluator (not AI)**.
+By default the browser uses a **deterministic mock evaluator** that matches rubric keywords
+and anti-signals. It is clearly labelled **Mock evaluator (not AI)**. No API key and no
+network service are needed for the default game.
 
-From the repository root:
+To use a real AI evaluator, start the server and point the browser at it:
 
 ```bash
-bun install --frozen-lockfile
-cp .env.example .env
-# Edit the gitignored .env locally: set GEMINI_API_KEY to your Google AI Studio key.
-# Set AI_EVALUATION_MODEL to a Gemini model enabled for that key/account.
-```
-
-```bash
-# terminal 1 — backend, port 8787
+# terminal 1 — Bun server
 bun run server
-```
 
-```bash
-# terminal 2 — frontend, port 5173
+# terminal 2 — Vite dev server
 bun run dev
 ```
 
-Open <http://localhost:5173>. After changing server variables, restart `bun run server`.
-Never put keys in `VITE_` variables, source code, Git or chat. If
-`AI_EVALUATION_API_KEY` is already set, it takes precedence over `GEMINI_API_KEY`.
+Create `.env.local` for the frontend:
 
-Check configuration and verify a real response separately:
-
-```bash
-curl http://localhost:8787/health
-bun run verify:ai
+```env
+VITE_EVALUATION_API_URL=http://localhost:8787/evaluate
 ```
 
-Health reports configuration only. `verify:ai` sends Q_D2 to the actual configured provider,
-validates its response, prints the resulting route and exits unsuccessfully if the key is
-missing or the provider fails. It does not silently substitute a mock. A successful live
-request still does not verify the educational correctness of the pack.
+The browser then calls `POST /evaluate`. The server reads the API key from its own
+environment; the key is never sent to the browser.
 
 ### Server environment variables
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `GEMINI_API_KEY` | empty | Server-only Google AI Studio credential. |
-| `AI_EVALUATION_API_KEY` | empty | Optional credential override, retained for compatibility. |
-| `AI_EVALUATION_URL` | `https://generativelanguage.googleapis.com/v1beta/openai/chat/completions` | OpenAI-compatible endpoint. |
-| `AI_EVALUATION_MODEL` | `gemini-2.5-flash` | Select an available model for your account. Availability has not been live-tested here. |
-| `AI_EVALUATION_TIMEOUT_MS` | `20000` | Provider timeout; default browser deadline is 25000 ms. |
-| `PORT` | `8787` | Backend port. If changed, adjust the frontend URL/proxy. |
-| `AI_EVALUATION_ALLOWED_ORIGIN` | `*` | CORS origin; `.env.example` uses `http://localhost:5173`. |
+| `AI_EVALUATION_API_KEY` | empty | Provider API key. If empty, `/evaluate` returns HTTP 503 `ai_not_configured` and the browser uses the labelled mock fallback. |
+| `AI_EVALUATION_URL` | `https://api.openai.com/v1/chat/completions` | OpenAI-compatible chat-completions endpoint. |
+| `AI_EVALUATION_MODEL` | `gpt-4o-mini` | Model name sent to the provider. |
+| `AI_EVALUATION_TIMEOUT_MS` | `12000` | Provider request timeout in milliseconds. |
+| `PORT` | `8787` | Port for the Bun server. |
+| `AI_EVALUATION_ALLOWED_ORIGIN` | `*` | CORS origin allowed to call the adapter. |
 
-For separately hosted frontends, set public `VITE_EVALUATION_API_URL` to the backend's
-`/evaluate` URL and rebuild/restart Vite. Static production hosting needs a reverse proxy
-for `/api/evaluate` or this explicit URL. `bun run preview` is a local build preview.
+PowerShell example for the server:
+
+```powershell
+$env:AI_EVALUATION_API_KEY = "your-key"
+bun run server
+```
+
+The frontend URL still belongs in `.env.local` as shown above, because Vite reads it when
+the dev server starts.
 
 ### Request and response flow
 
@@ -246,20 +231,20 @@ insertion or execution of AI-generated code; strings are rendered with `textCont
 | `502` | `ai_unreachable` | Provider could not be reached |
 | `502` | `invalid_provider_response` | Provider response had no chat-completion message |
 | `502` | `invalid_ai_output` | Message content was not valid JSON or failed schema/rubric validation |
-| `503` | `ai_not_configured` | Neither server credential variable is set |
+| `503` | `ai_not_configured` | `AI_EVALUATION_API_KEY` is empty |
 | `504` | `ai_timeout` | Provider request exceeded the configured timeout |
 
-`GET /health` returns `ok`, `configured`, `model` and an explanatory `note`; it never
-exposes the API key or claims that a live provider request succeeded.
+`GET /health` returns `{ "ok": true, "configured": boolean, "model": string }` and never
+exposes the API key.
 
 ## Mock vs real behaviour
 
-| Feature | Default run | `?mockEvaluation=1` |
+| Feature | Default run | With `VITE_EVALUATION_API_URL` |
 | --- | --- | --- |
-| Challenge content | Bundled provisional pack + retained prototype questions | Same content |
-| Answer evaluation | Gemini server adapter; labelled mock fallback on failure | Deterministic mock, labelled “not AI” |
-| API key required | For live AI only, server side | No |
-| Works without provider access | Yes, through labelled fallback | Yes |
+| Challenge content | Bundled mock data via `ChallengeProvider` | Same bundled content |
+| Answer evaluation | Deterministic mock rubric evaluator, labelled “not AI” | Server AI adapter, or labelled mock fallback |
+| API key required | No | Yes, on the server |
+| Works offline | Yes | Yes — fallback keeps the game playable |
 
 Query parameters:
 
@@ -283,8 +268,6 @@ Query parameters:
 ├── public/favicon.svg
 ├── server/
 │   ├── aiEvaluationAdapter.ts     # Provider call, prompt, timeout and output validation
-│   ├── config.ts                  # Server-only Gemini endpoint/key/model configuration
-│   ├── verifyAi.ts                # Real-provider smoke check; no mock fallback
 │   ├── index.ts                   # Bun HTTP server: /health and /evaluate
 │   └── bun.d.ts                   # Minimal Bun typings
 ├── src/
@@ -294,8 +277,7 @@ Query parameters:
 │   │   ├── ChallengeProvider.ts   # Provider interface + HTTP implementation
 │   │   ├── providerFactory.ts     # Chooses mock or HTTP challenge provider
 │   │   ├── mockProvider.ts        # Local provider with latency/error simulation
-│   │   ├── coursePackAdapter.ts   # Validated C2 pack import with original metadata
-│   │   ├── mockChallenges.ts      # Imported pack + retained prototype challenges
+│   │   ├── mockChallenges.ts      # C1, C2 adaptive, C3 and boss challenges
 │   │   ├── motoriFramework.ts     # Concepts, course, rubrics, diagnostics, boss rounds
 │   │   ├── course.ts              # Door and boss configuration
 │   │   └── challenge.schema.json  # JSON Schema for challenge content
@@ -352,22 +334,49 @@ Game logic is separated from educational content:
 
 ## Verification actually performed
 
-See `HACKATHON_HANDOFF.md` for the baseline, final check results, browser evidence,
-remaining blockers, changed files and rollback instructions. The baseline passed 116 tests,
-typecheck and production build before edits. No provider credential was available; **a live
-Gemini response has not been verified**. Provider-format tests use explicit test doubles.
+Commands run in this workspace:
+
+| Check | Result |
+| --- | --- |
+| `bun run typecheck` (`tsc --noEmit`) | Passed |
+| `bun run test` (`vitest run`) | **116 tests passed across 12 files** |
+| `bun run build` (`tsc --noEmit && vite build`) | Passed; produced `dist/` |
+| Browser smoke test | Full path completed: 3-question diagnostic → C2 advanced route → all 3 doors → all 3 boss phases → victory → result → restart |
+| Live server smoke test | `GET /health` → `{ ok: true, configured: false }`; `POST /evaluate` without a key → HTTP 503 `ai_not_configured` |
+
+The browser smoke test also verified:
+
+- the C2 route note “Advanced challenge” and the adaptive challenge id
+  `c2-advanced-intake-matching`;
+- missing answer-source warnings in diagnostic and challenge feedback;
+- provisional skill updates after diagnostic, doors and boss rounds;
+- rubric criteria and source references in the UI;
+- the **Mock fallback (AI unavailable)** label with a fallback reason after a simulated
+  evaluator outage.
+
+The test suite covers the requested checks directly: different diagnostic answers produce
+different routes; skill states update correctly; invalid AI outputs are rejected; missing
+sources are reported; and the game remains playable when the evaluation API fails.
+
+The production build reports a chunk-size warning because Phaser is bundled as one large
+chunk (~1.57 MB uncompressed, ~365 kB gzip). This is expected for a prototype; code
+splitting can come later.
+
+The live AI provider path was **not** exercised against a real external API because no API
+key was supplied. The adapter is covered with stubbed provider responses (valid output,
+invalid output, HTTP errors, network errors and timeout), and the live server's
+unconfigured 503 path was verified.
 
 ## Known limitations / out of scope
 
-- Course questions, answers and rubrics remain unverified. Imported C2 questions have
-  page citations, but the original PDF must still be checked; other authored questions
-  retain missing answer-source warnings.
+- All authored questions, answers and rubrics are unverified; answer sources are missing by
+  design until real course material is supplied.
 - Only C2 has an adaptive challenge bank. C1 and C3 use fixed checks, and C4/C5 are modeled
   but not assessed.
 - The boss is limited to three phases (C2, C3, C2) and requires a perfect 3/3 run;
   difficulty tuning is left for a later milestone.
-- Without a valid server key, evaluation uses the labelled deterministic mock fallback.
-  Its keyword checks cannot judge arbitrary free-form reasoning robustly.
+- The default evaluator is a deterministic keyword/rubric mock, not AI. It cannot judge
+  free-form reasoning robustly.
 - The AI adapter expects an OpenAI-compatible chat-completions response shape; other
   providers need a compatible endpoint or an adapter change.
 - No persistence, accounts, leaderboard, analytics or database.

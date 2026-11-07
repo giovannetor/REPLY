@@ -94,13 +94,6 @@ export function decideRoute(input: DecideRouteInput): AdaptiveRoute {
     throw new Error(`No adaptive challenge bank exists for concept ${input.conceptId}.`);
   }
 
-  // Option correctness is deterministic; uncertain reasoning cannot turn a
-  // known wrong selection into a clarification or advanced challenge.
-  if (!input.answerCorrect) {
-    return selectChallenge(input.conceptId, candidates, 'remedial',
-      'The answer was incorrect, so the director selects a remedial challenge on the same concept.');
-  }
-
   const inconsistentVerdict =
     (input.evaluation.verdict === 'correct' && !input.answerCorrect) ||
     (input.evaluation.verdict === 'incorrect' && input.answerCorrect);

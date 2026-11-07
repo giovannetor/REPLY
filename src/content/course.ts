@@ -1,6 +1,6 @@
 import type { DoorId } from '../domain/challenge';
 import type { ConceptId } from '../domain/learning';
-import { ADAPTIVE_BANKS, BOSS_ROUNDS, MOTORI_COURSE } from './motoriFramework';
+import { BOSS_ROUNDS, MOTORI_COURSE } from './motoriFramework';
 
 export const COURSE = {
   name: MOTORI_COURSE.name,
@@ -36,7 +36,7 @@ export const DOORS: readonly DoorDefinition[] = [
     id: 'order',
     label: 'Door of the Intake',
     shortLabel: 'Intake',
-    challengeId: ADAPTIVE_BANKS.C2?.find((ref) => ref.kind === 'remedial')?.challengeId ?? 'c2-remedial-mass-flow',
+    challengeId: 'c2-remedial-mass-flow',
     conceptId: 'C2',
     adaptive: true,
     color: 0xfbbf24,

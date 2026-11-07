@@ -18,7 +18,7 @@ export type ValidationResult<T> =
   | { ok: true; value: T }
   | { ok: false; errors: string[] };
 
-const ID_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/;
+const ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/;
 const REASONING_VALUES: readonly ReasoningQuality[] = [
   'sound',
   'flawed',
@@ -198,8 +198,6 @@ function validateRubric(
       'passThreshold',
       'provisional',
       'clarificationPrompt',
-      'scoringGuide',
-      'misconception',
     ],
     'rubric',
     errors,
@@ -218,21 +216,6 @@ function validateRubric(
   const clarificationPrompt = readString(input, 'clarificationPrompt', 'rubric', errors, {
     max: MAX_CLARIFICATION,
   });
-  const misconception = readString(input, 'misconception', 'rubric', errors, {
-    required: false, max: 1_000,
-  });
-  let scoringGuide: EvaluationRubric['scoringGuide'];
-  if (input.scoringGuide !== undefined) {
-    if (!isRecord(input.scoringGuide)) {
-      errors.push('rubric.scoringGuide must be an object');
-    } else {
-      rejectUnknownKeys(input.scoringGuide, ['0', '1', '2'], 'rubric.scoringGuide', errors);
-      const zero = readString(input.scoringGuide, '0', 'rubric.scoringGuide', errors, { max: 1_000 });
-      const one = readString(input.scoringGuide, '1', 'rubric.scoringGuide', errors, { max: 1_000 });
-      const two = readString(input.scoringGuide, '2', 'rubric.scoringGuide', errors, { max: 1_000 });
-      if (zero && one && two) scoringGuide = { '0': zero, '1': one, '2': two };
-    }
-  }
 
   const rawCriteria = input.criteria;
   const criteria: EvaluationCriterion[] = [];
@@ -318,8 +301,6 @@ function validateRubric(
     passThreshold,
     provisional,
     clarificationPrompt,
-    ...(scoringGuide ? { scoringGuide } : {}),
-    ...(misconception ? { misconception } : {}),
   };
 }
 
