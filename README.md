@@ -1,4 +1,8 @@
-# BossFight AI — Motori per Aeromobili
+# PoliQuest — Motori per Aeromobili
+
+![PoliQuest official logo](public/brand/poliquest-logo.webp)
+
+**PoliQuest** is the public-facing game brand. `BossFight AI` remains the historical/internal prototype name in some technical modules.
 
 An adaptive educational dungeon prototype for the **Motori per Aeromobili** assessment
 framework. The existing Vite + Phaser BossFight AI game is preserved: the start screen,
@@ -352,10 +356,13 @@ Game logic is separated from educational content:
 
 ## Verification actually performed
 
-See `HACKATHON_HANDOFF.md` for the baseline, final check results, browser evidence,
-remaining blockers, changed files and rollback instructions. The baseline passed 116 tests,
-typecheck and production build before edits. No provider credential was available; **a live
-Gemini response has not been verified**. Provider-format tests use explicit test doubles.
+The Poliquest UI refresh passed typecheck, 144 tests and a production build. A real
+`bun run verify:ai` call with `gemini-3.5-flash-lite` evaluated Q_D2 as correct/sound and
+selected Q_A2. An isolated Chromium run exercised course creation with an actual file,
+reload persistence, three live diagnostic evaluations, Q_A2, all three doors and all
+three boss phases through Victory with no page errors. Desktop and 390px mobile
+screenshots were inspected. Hit/counterattack state and safe math rendering also have
+component tests. Earlier prototype checks are recorded in `HACKATHON_HANDOFF.md`.
 
 ## Known limitations / out of scope
 
@@ -370,12 +377,34 @@ Gemini response has not been verified**. Provider-format tests use explicit test
   Its keyword checks cannot judge arbitrary free-form reasoning robustly.
 - The AI adapter expects an OpenAI-compatible chat-completions response shape; other
   providers need a compatible endpoint or an adapter change.
-- No persistence, accounts, leaderboard, analytics or database.
+- Course drafts and uploaded materials persist in browser IndexedDB only. Run progress, accounts, leaderboards and analytics are not persisted. Clearing site data removes the local library.
 - No PoliTO login, multiplayer or additional game genres — explicitly out of scope.
-- No audio, touch controls or gamepad support; placeholder geometric art only.
+- Local pixel-style astronaut and guardian art; no audio, touch movement or gamepad support. The course menus and combat cards have responsive layouts, but dungeon movement still requires a keyboard.
 
 ## Dev-only hook
 
 In development builds, `window.__BOSSFIGHT_DEV__` exposes the app instance for browser smoke
 testing (for example, inspecting the active Phaser scene or the current C2 route). It is not
 included in production builds.
+
+
+## Poliquest interface and local course library
+
+The home screen opens the course hangar. **Motori per Aeromobili** is the seeded playable
+mission: launch it to use the existing diagnostic → adaptive dungeon → three-phase boss flow.
+New courses can be saved with a title, description, optional institution/professor and up to
+10 documents (20 MB total; PDF, TXT, MD, PPT/PPTX, DOC/DOCX). Actual files and metadata are
+saved atomically in IndexedDB on this browser/device. They are not uploaded to a server,
+parsed or sent to AI. Cards show **Draft** or **Materials uploaded**; only the seeded course
+is **Playable**. No generation or content-pack approval pipeline is implemented.
+
+Questions retain hints, status, identifiers, rubric signals and source references. Expand
+**Sources & verification** to read the secondary citation details. `src/ui/math.ts` renders
+explicit inline TeX (`\(…\)` or `$…$`) and block TeX (`\[…\]` or `$$…$$`) with bundled
+KaTeX and local fonts. Common legacy variables are also recognized. Ordinary prose is
+inserted as text, KaTeX trust is disabled, and malformed TeX falls back to readable text.
+
+During combat, a dedicated guardian panel stays beside the question on desktop and above
+it on small screens. Its HP, resolve and hit/counterattack feedback follow the existing
+boss state/events; it does not decide correctness, damage, routing or victory. Animations
+respect reduced-motion preferences. The existing labelled AI fallback is unchanged.

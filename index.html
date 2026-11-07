@@ -6,10 +6,10 @@
     <meta name="theme-color" content="#05070f" />
     <meta
       name="description"
-      content="BossFight AI — a playable AI-directed dungeon prototype for university courses."
+      content="PoliQuest — learn university subjects through adaptive, AI-directed space missions and boss fights."
     />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>BossFight AI · Motori per Aeromobili</title>
+    <link rel="icon" type="image/webp" href="/brand/poliquest-logo.webp" />
+    <title>PoliQuest · Learn by playing</title>
   </head>
   <body>
     <div id="app">
@@ -17,18 +17,36 @@
 
       <header id="hud" class="hud is-hidden" aria-label="Run status">
         <div class="hud-brand">
-          <span class="sigil" aria-hidden="true">◆</span>
+          <img
+            class="official-logo hud-logo"
+            src="/brand/poliquest-logo.webp"
+            alt=""
+            width="42"
+            height="38"
+          />
           <div class="hud-brand-text">
             <strong id="hud-course">Motori per Aeromobili</strong>
-            <span>BossFight AI · <span id="hud-course-code">MOTORI</span></span>
+            <span>PoliQuest · <span id="hud-course-code">MOTORI</span></span>
           </div>
         </div>
         <div class="hud-progress">
           <span id="hud-doors">Doors cleared 0 / 3</span>
           <div class="pips" id="hud-pips" aria-hidden="true">
-            <span class="pip pip-logic" data-door="logic" title="Door of Stream Force"></span>
-            <span class="pip pip-order" data-door="order" title="Door of the Intake"></span>
-            <span class="pip pip-truth" data-door="truth" title="Door of the Combustor"></span>
+            <span
+              class="pip pip-logic"
+              data-door="logic"
+              title="Door of Stream Force"
+            ></span>
+            <span
+              class="pip pip-order"
+              data-door="order"
+              title="Door of the Intake"
+            ></span>
+            <span
+              class="pip pip-truth"
+              data-door="truth"
+              title="Door of the Combustor"
+            ></span>
           </div>
         </div>
         <div class="hud-controls">
@@ -41,7 +59,9 @@
           <span class="boss-name">The Registrar</span>
           <span id="boss-round">Round 1 / 3</span>
         </div>
-        <div class="hp-track"><div id="boss-hp-fill" class="hp-fill"></div></div>
+        <div class="hp-track">
+          <div id="boss-hp-fill" class="hp-fill"></div>
+        </div>
         <div class="boss-hud-bottom">
           <span>Boss HP <strong id="boss-hp-text">3 / 3</strong></span>
           <span>Resolve <strong id="player-hp-text">3 / 3</strong></span>
@@ -63,12 +83,225 @@
       <div id="toast" class="toast is-hidden" role="status"></div>
 
       <main id="overlay-root" class="overlay-root">
+        <section
+          id="home-screen"
+          class="screen home-screen"
+          aria-labelledby="home-title"
+        >
+          <div class="home-shell">
+            <header class="home-nav">
+              <a class="home-logo" href="/" aria-label="PoliQuest home"
+                ><img
+                  class="official-logo home-brand-logo"
+                  src="/brand/poliquest-logo.webp"
+                  alt=""
+                  width="80"
+                  height="72"
+                /><span
+                  >PoliQuest<small class="home-subbrand"
+                    >BOSSFIGHT AI</small
+                  ></span
+                ></a
+              ><span class="connection-pill"
+                ><i></i> COURSE HANGAR / LOCAL DEMO</span
+              ><span class="pilot-avatar"
+                ><img src="/art/astronaut.svg" alt="Your astronaut" /> CADET
+                01</span
+              >
+            </header>
+            <div class="home-hero">
+              <div class="hero-copy">
+                <p class="eyebrow">YOUR KNOWLEDGE. A NEW FRONTIER.</p>
+                <h1 id="home-title">
+                  Small steps.<br /><span>Giant leaps.</span>
+                </h1>
+                <p class="hero-description">
+                  Turn your next study session into a mission.<br />Explore
+                  concepts, unlock doors, face the final boss.
+                </p>
+                <a href="#course-library" class="btn btn-primary hero-cta"
+                  >Explore your courses <span aria-hidden="true">↗</span></a
+                >
+                <p class="hero-footnote">
+                  01 SEEDED MISSION <span> / </span> AI-GUIDED LEARNING
+                </p>
+              </div>
+              <div class="space-illustration" aria-hidden="true">
+                <div class="planet-orbit"></div>
+                <div class="pixel-planet"><div class="planet-grid"></div></div>
+                <img class="hero-astronaut" src="/art/astronaut.svg" alt="" />
+                <div class="coordinate coordinate-a">SECTOR 01 / KNOWLEDGE</div>
+                <div class="coordinate coordinate-b">
+                  NEXT OBJECTIVE<br /><strong>THE REGISTRAR</strong>
+                </div>
+                <span class="space-spark spark-a">＋</span
+                ><span class="space-spark spark-b">✦</span>
+              </div>
+            </div>
+            <section
+              id="course-library"
+              class="course-library"
+              aria-labelledby="library-title"
+            >
+              <div class="library-heading">
+                <div>
+                  <p class="eyebrow">MISSION CONTROL</p>
+                  <h2 id="library-title">
+                    Your course hangar
+                    <span id="library-count">1 course in your hangar</span>
+                  </h2>
+                </div>
+                <button id="create-course" class="btn btn-ghost" type="button">
+                  ＋ Create new course
+                </button>
+              </div>
+              <p id="library-notice" class="library-notice" role="status"></p>
+              <div id="course-grid" class="course-grid">
+                <article class="course-card seeded-course">
+                  <div class="course-art engine-art" aria-hidden="true">
+                    <span class="art-label">SECTOR / 01</span>
+                    <div class="pixel-engine">
+                      <span></span><span></span><span></span><span></span>
+                    </div>
+                    <span class="art-coordinates"
+                      >45° N · PROPULSION ARCHIVE</span
+                    >
+                  </div>
+                  <div class="course-card-body">
+                    <div class="course-card-meta">
+                      <span class="badge playable-badge">● Playable</span
+                      ><span class="demo-label">SEEDED DEMO</span>
+                    </div>
+                    <h3>Motori per Aeromobili</h3>
+                    <p class="course-institution">Politecnico di Torino</p>
+                    <p class="course-description">
+                      Master stream force, supersonic intakes and combustor
+                      stability. Three doors. One final encounter.
+                    </p>
+                    <div class="course-tags">
+                      <span>3 concepts</span><span>3 boss phases</span
+                      ><span>AI evaluation</span>
+                    </div>
+                    <button
+                      id="play-seeded"
+                      class="btn btn-primary btn-wide"
+                      type="button"
+                    >
+                      Launch mission <span aria-hidden="true">→</span>
+                    </button>
+                  </div>
+                </article>
+                <div class="library-empty">
+                  <span class="empty-orbit" aria-hidden="true">＋</span>
+                  <h3>Your next mission starts here.</h3>
+                  <p>Create a course and bring your study materials aboard.</p>
+                  <span class="badge"
+                    >DRAFT → MATERIALS → CONTENT PACK → PLAY</span
+                  >
+                  <p class="fineprint">
+                    New courses are saved locally. Content generation is coming
+                    next; only the seeded demo is playable.
+                  </p>
+                </div>
+              </div>
+            </section>
+            <footer class="home-footer">
+              <span>POLIQUEST / LEARN. EXPLORE. CONQUER.</span
+              ><span>LOCAL DEMO · PROVISIONAL COURSE CONTENT</span>
+            </footer>
+          </div>
+        </section>
+        <dialog
+          id="course-dialog"
+          class="course-dialog"
+          aria-labelledby="create-title"
+        >
+          <form id="course-form">
+            <div class="dialog-header">
+              <p class="eyebrow">NEW MISSION / COURSE SETUP</p>
+              <h2 id="create-title">Chart a new course.</h2>
+              <p class="muted">
+                Save a course draft and its materials on this device.
+              </p>
+            </div>
+            <label class="field-label" for="course-title"
+              >Course title <span aria-hidden="true">*</span></label
+            ><input
+              id="course-title"
+              class="text-input"
+              required
+              maxlength="100"
+              placeholder="e.g. Orbital Mechanics"
+            /><label class="field-label" for="course-description"
+              >Short description <span aria-hidden="true">*</span></label
+            ><textarea
+              id="course-description"
+              class="text-input"
+              required
+              maxlength="500"
+              rows="3"
+              placeholder="What will you explore?"
+            ></textarea
+            ><label class="field-label" for="course-institution"
+              >Institution / professor <span>(optional)</span></label
+            ><input
+              id="course-institution"
+              class="text-input"
+              maxlength="160"
+              placeholder="University or teaching team"
+            /><label class="material-drop" for="course-materials"
+              ><span aria-hidden="true">↑</span
+              ><strong>Bring your materials aboard</strong
+              ><small
+                >PDF, TXT, MD, PPT(X), DOC(X) · up to 10 files / 20 MB
+                total</small
+              ><input
+                id="course-materials"
+                type="file"
+                multiple
+                accept=".pdf,.txt,.md,.ppt,.pptx,.doc,.docx"
+            /></label>
+            <p id="material-selection" class="material-selection">
+              No materials selected. You can save a draft without files.
+            </p>
+            <p class="course-pending">
+              Materials stay in this browser. They are not sent to AI or parsed.
+              Content generation is coming next; a new course cannot be played
+              yet.
+            </p>
+            <p id="course-save-status" class="inline-status" role="status"></p>
+            <div class="dialog-actions">
+              <button id="course-cancel" type="button" class="btn btn-ghost">
+                Cancel</button
+              ><button id="course-save" type="submit" class="btn btn-primary">
+                Save course
+              </button>
+            </div>
+          </form>
+        </dialog>
         <section id="start-screen" class="screen start-screen">
           <div class="ambient ambient-a" aria-hidden="true"></div>
           <div class="ambient ambient-b" aria-hidden="true"></div>
           <div class="panel start-panel">
-            <div class="brand-mark"><span class="brand-rune">◆</span> BossFight AI</div>
-            <p class="eyebrow">Interactive course prototype</p>
+            <button id="course-home-back" class="link-btn" type="button">
+              ← Course hangar
+            </button>
+            <div class="brand-mark">
+              <img
+                class="official-logo briefing-logo"
+                src="/brand/poliquest-logo.webp"
+                alt="PoliQuest official logo"
+                width="100"
+                height="90"
+              />
+              <span class="brand-sub">/ BossFight AI</span>
+            </div>
+            <img
+              class="briefing-astronaut"
+              src="/art/astronaut.svg"
+              alt="Pixel astronaut ready for launch"
+            />
+            <p class="eyebrow">MISSION BRIEFING / 01</p>
             <h1 id="start-course">Motori per Aeromobili</h1>
             <p class="course-line">
               <span id="start-course-code">MOTORI</span> ·
@@ -89,18 +322,23 @@
                 <span>boss phases</span>
               </div>
             </div>
-            <button id="start-btn" class="btn btn-primary btn-wide" type="button">
+            <button
+              id="start-btn"
+              class="btn btn-primary btn-wide"
+              type="button"
+            >
               Begin diagnostic
             </button>
             <p class="fineprint">
-              <span id="provider-name">Local mock archive</span> · Arrow keys / WASD to move ·
-              <kbd>E</kbd> to interact
+              <span id="provider-name">Local mock archive</span> · Arrow keys /
+              WASD to move · <kbd>E</kbd> to interact
             </p>
             <p id="provider-note" class="provider-note is-hidden"></p>
             <p class="start-disclaimer">
-              All questions, answers, rubrics and mastery estimates are authored prototype
-              content. The one-page framework summary is a topic source only; it does not
-              verify questions, answers, rubrics or slide references.
+              All questions, answers, rubrics and mastery estimates are authored
+              prototype content. The one-page framework summary is a topic
+              source only; it does not verify questions, answers, rubrics or
+              slide references.
             </p>
           </div>
         </section>
@@ -116,10 +354,14 @@
           <div id="diagnostic-panel" class="panel diagnostic-panel">
             <header class="panel-head">
               <div>
-                <p id="diagnostic-progress" class="eyebrow">Diagnostic · 1 / 3</p>
+                <p id="diagnostic-progress" class="eyebrow">
+                  Diagnostic · 1 / 3
+                </p>
                 <h2 id="diagnostic-concept">Concept</h2>
               </div>
-              <span id="diagnostic-badge" class="badge badge-warn">Provisional</span>
+              <span id="diagnostic-badge" class="badge badge-warn"
+                >Provisional</span
+              >
             </header>
 
             <div id="diagnostic-question-block" class="state-block">
@@ -136,9 +378,18 @@
                 placeholder="State the mechanism, not just the conclusion."
               ></textarea>
               <p id="diagnostic-explanation-hint" class="hint"></p>
-              <p id="diagnostic-status" class="inline-status is-hidden" role="status"></p>
+              <p
+                id="diagnostic-status"
+                class="inline-status is-hidden"
+                role="status"
+              ></p>
               <div class="btn-row">
-                <button id="diagnostic-submit" class="btn btn-primary" type="button" disabled>
+                <button
+                  id="diagnostic-submit"
+                  class="btn btn-primary"
+                  type="button"
+                  disabled
+                >
                   Evaluate answer
                 </button>
               </div>
@@ -186,13 +437,17 @@
             <div id="diagnostic-summary" class="state-block is-hidden">
               <p class="state-title">Diagnostic complete</p>
               <p class="muted">
-                These mastery estimates are provisional. They are based on authored prototype
-                rubrics, not verified course materials.
+                These mastery estimates are provisional. They are based on
+                authored prototype rubrics, not verified course materials.
               </p>
               <ul id="diagnostic-summary-list" class="summary-list"></ul>
               <div id="diagnostic-summary-route" class="route-note"></div>
               <ul id="diagnostic-summary-skills" class="skill-list"></ul>
-              <button id="diagnostic-begin" class="btn btn-primary btn-wide" type="button">
+              <button
+                id="diagnostic-begin"
+                class="btn btn-primary btn-wide"
+                type="button"
+              >
                 Enter the dungeon
               </button>
             </div>
@@ -207,69 +462,138 @@
           aria-labelledby="challenge-title"
           aria-live="polite"
         >
-          <div id="challenge-panel" class="panel challenge-panel">
-            <header class="panel-head">
-              <div>
-                <p id="challenge-eyebrow" class="eyebrow">Door of Stream Force</p>
-                <h2 id="challenge-title">Challenge</h2>
-              </div>
-              <button
-                id="challenge-close"
-                class="icon-btn"
-                type="button"
-                aria-label="Leave challenge"
-              >
-                ×
-              </button>
-            </header>
+          <div class="encounter-layout">
+            <div id="challenge-panel" class="panel challenge-panel">
+              <header class="panel-head">
+                <div>
+                  <p id="challenge-eyebrow" class="eyebrow">
+                    Door of Stream Force
+                  </p>
+                  <h2 id="challenge-title">Challenge</h2>
+                </div>
+                <button
+                  id="challenge-close"
+                  class="icon-btn"
+                  type="button"
+                  aria-label="Leave challenge"
+                >
+                  ×
+                </button>
+              </header>
 
-            <div id="challenge-loading" class="state-block">
-              <div class="loader" aria-hidden="true"></div>
-              <p class="state-title">Consulting the archive…</p>
-              <p class="muted">Fetching and validating challenge data.</p>
-              <button id="challenge-cancel-loading" class="btn btn-ghost" type="button">
-                Back to dungeon
-              </button>
-            </div>
-
-            <div id="challenge-error" class="state-block is-hidden">
-              <p class="error-kicker">Archive error</p>
-              <p class="state-title">The archive is unreachable.</p>
-              <p id="challenge-error-message" class="muted"></p>
-              <div class="btn-row">
-                <button id="challenge-retry" class="btn btn-primary" type="button">Retry</button>
-                <button id="challenge-back-error" class="btn btn-ghost" type="button">
+              <div id="challenge-loading" class="state-block">
+                <div class="loader" aria-hidden="true"></div>
+                <p class="state-title">Consulting the archive…</p>
+                <p class="muted">Fetching and validating challenge data.</p>
+                <button
+                  id="challenge-cancel-loading"
+                  class="btn btn-ghost"
+                  type="button"
+                >
                   Back to dungeon
                 </button>
               </div>
-            </div>
 
-            <div id="challenge-question" class="state-block is-hidden">
-              <p id="challenge-prompt" class="prompt"></p>
-              <div id="challenge-learning" class="learning-context is-hidden"></div>
-              <p id="challenge-hint" class="hint is-hidden"></p>
-              <div id="challenge-options" class="options"></div>
-              <div id="challenge-sequence" class="sequence is-hidden">
-                <p class="instruction">Click the steps in the correct order.</p>
-                <ol id="sequence-selected" class="sequence-selected"></ol>
-                <div id="sequence-pool" class="sequence-pool"></div>
-                <button id="sequence-reset" class="link-btn" type="button">Reset order</button>
+              <div id="challenge-error" class="state-block is-hidden">
+                <p class="error-kicker">Archive error</p>
+                <p class="state-title">The archive is unreachable.</p>
+                <p id="challenge-error-message" class="muted"></p>
+                <div class="btn-row">
+                  <button
+                    id="challenge-retry"
+                    class="btn btn-primary"
+                    type="button"
+                  >
+                    Retry
+                  </button>
+                  <button
+                    id="challenge-back-error"
+                    class="btn btn-ghost"
+                    type="button"
+                  >
+                    Back to dungeon
+                  </button>
+                </div>
               </div>
-              <p id="challenge-attempts" class="attempts"></p>
-              <div class="btn-row">
-                <button id="challenge-submit" class="btn btn-primary" type="button" disabled>
-                  Submit answer
-                </button>
-              </div>
-            </div>
 
-            <div id="challenge-feedback" class="state-block is-hidden">
-              <p id="feedback-verdict" class="verdict"></p>
-              <p id="feedback-explanation" class="muted"></p>
-              <p id="feedback-correct" class="correct-answer"></p>
-              <div id="feedback-source" class="source-block"></div>
-              <div id="feedback-actions" class="btn-row"></div>
+              <div id="challenge-question" class="state-block is-hidden">
+                <p id="challenge-prompt" class="prompt"></p>
+                <div
+                  id="challenge-learning"
+                  class="learning-context is-hidden"
+                ></div>
+                <p id="challenge-hint" class="hint is-hidden"></p>
+                <div id="challenge-options" class="options"></div>
+                <div id="challenge-sequence" class="sequence is-hidden">
+                  <p class="instruction">
+                    Click the steps in the correct order.
+                  </p>
+                  <ol id="sequence-selected" class="sequence-selected"></ol>
+                  <div id="sequence-pool" class="sequence-pool"></div>
+                  <button id="sequence-reset" class="link-btn" type="button">
+                    Reset order
+                  </button>
+                </div>
+                <p id="challenge-attempts" class="attempts"></p>
+                <div class="btn-row">
+                  <button
+                    id="challenge-submit"
+                    class="btn btn-primary"
+                    type="button"
+                    disabled
+                  >
+                    Submit answer
+                  </button>
+                </div>
+              </div>
+
+              <div id="challenge-feedback" class="state-block is-hidden">
+                <p id="feedback-verdict" class="verdict"></p>
+                <p id="feedback-explanation" class="muted"></p>
+                <p id="feedback-correct" class="correct-answer"></p>
+                <div id="feedback-source" class="source-block"></div>
+                <div id="feedback-actions" class="btn-row"></div>
+              </div>
             </div>
+            <aside
+              id="boss-companion"
+              class="boss-companion"
+              aria-label="Live boss encounter"
+            >
+              <div class="companion-top">
+                <span class="eyebrow">FINAL ENCOUNTER</span
+                ><span class="live-dot">LIVE</span>
+              </div>
+              <p id="companion-phase" class="badge">Phase 1 / 3</p>
+              <div class="boss-stage">
+                <div class="orbit orbit-one"></div>
+                <div class="orbit orbit-two"></div>
+                <img
+                  class="boss-sprite"
+                  src="/art/registrar.svg"
+                  alt="The Registrar, a violet armored archive guardian"
+                /><span class="damage-float" aria-hidden="true">−1</span>
+              </div>
+              <h2>The Registrar</h2>
+              <p class="muted">Keeper of the final exam</p>
+              <div class="companion-health">
+                <span>SHIELD INTEGRITY</span
+                ><strong id="companion-hp-text">3 / 3 HP</strong>
+              </div>
+              <div class="hp-track">
+                <div id="companion-hp" class="hp-fill"></div>
+              </div>
+              <p id="combat-feedback" class="combat-feedback" role="status">
+                Your knowledge is your weapon.
+              </p>
+              <div class="pilot-status">
+                <img src="/art/astronaut.svg" alt="" />
+                <div>
+                  <span class="eyebrow">YOUR RESOLVE</span
+                  ><strong id="companion-resolve">3 / 3</strong>
+                </div>
+              </div>
+            </aside>
           </div>
         </section>
 
@@ -282,12 +606,16 @@
             <div id="result-stats" class="stat-grid"></div>
             <h2 class="result-skills-title">Provisional skills</h2>
             <ul id="result-skills" class="skill-list result-skills"></ul>
-            <button id="restart-btn" class="btn btn-primary btn-wide" type="button">
+            <button
+              id="restart-btn"
+              class="btn btn-primary btn-wide"
+              type="button"
+            >
               Run it again
             </button>
             <p class="fineprint">
-              Prototype run · progress resets when you restart. Skill estimates are provisional
-              and unverified.
+              Prototype run · progress resets when you restart. Skill estimates
+              are provisional and unverified.
             </p>
           </div>
         </section>
