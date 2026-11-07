@@ -1,3 +1,4 @@
+import { BossPanel } from './BossPanel';
 import {
   BOSS_MAX_HP,
   PLAYER_MAX_HP,
@@ -38,6 +39,7 @@ export interface AppUICallbacks {
 }
 
 export class AppUI {
+  private readonly bossPanel = new BossPanel();
   private readonly startScreen = mustGet<HTMLElement>('start-screen');
   private readonly diagnosticScreen = mustGet<HTMLElement>('diagnostic-screen');
   private readonly startCourse = mustGet<HTMLElement>('start-course');
@@ -151,6 +153,7 @@ export class AppUI {
   }
 
   updateBossHud(state: BossState): void {
+    this.bossPanel.update(state);
     this.bossRound.textContent = `Round ${currentRoundNumber(state)} / ${state.totalRounds}`;
     this.bossHpFill.style.width = `${Math.max(0, (state.bossHp / BOSS_MAX_HP) * 100)}%`;
     this.bossHpText.textContent = `${state.bossHp} / ${BOSS_MAX_HP}`;

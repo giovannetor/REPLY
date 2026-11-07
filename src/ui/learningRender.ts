@@ -1,3 +1,4 @@
+import { renderMath } from './math';
 import type {
   Concept,
   ConceptId,
@@ -51,10 +52,10 @@ export function renderSkillList(
     const head = document.createElement('div');
     head.className = 'skill-head';
     const name = document.createElement('strong');
-    name.textContent = `${concept.id} · ${concept.shortTitle}`;
+    renderMath(name, `${concept.id} · ${concept.shortTitle}`);
     const value = document.createElement('span');
     value.className = 'skill-value';
-    value.textContent = concept.assessedInThisSlice ? formatMastery(state) : '—';
+    renderMath(value, concept.assessedInThisSlice ? formatMastery(state) : '—');
     head.append(name, value);
 
     item.append(head);
@@ -62,19 +63,22 @@ export function renderSkillList(
       item.append(makeBar(state.mastery));
       const meta = document.createElement('span');
       meta.className = 'skill-meta';
-      meta.textContent = `${skillStatusLabel(state)} · ${state.evidenceCount} evidence`;
+      renderMath(
+        meta,
+        `${skillStatusLabel(state)} · ${state.evidenceCount} evidence`,
+      );
       item.append(meta);
     } else {
       const meta = document.createElement('span');
       meta.className = 'skill-meta';
-      meta.textContent = 'Not assessed in this slice';
+      renderMath(meta, 'Not assessed in this slice');
       item.append(meta);
     }
 
     if (!options.compact) {
       const summary = document.createElement('p');
       summary.className = 'skill-summary';
-      summary.textContent = concept.focus;
+      renderMath(summary, concept.focus);
       item.append(summary);
     }
 
@@ -93,10 +97,10 @@ export function renderSkillReadout(
   const head = document.createElement('div');
   head.className = 'skill-head';
   const title = document.createElement('strong');
-  title.textContent = `${concept.id} · ${concept.shortTitle}`;
+  renderMath(title, `${concept.id} · ${concept.shortTitle}`);
   const value = document.createElement('span');
   value.className = 'skill-value';
-  value.textContent = concept.assessedInThisSlice ? formatMastery(state) : '—';
+  renderMath(value, concept.assessedInThisSlice ? formatMastery(state) : '—');
   head.append(title, value);
   container.append(head);
 
@@ -104,12 +108,15 @@ export function renderSkillReadout(
     container.append(makeBar(state.mastery));
     const meta = document.createElement('span');
     meta.className = 'skill-meta';
-    meta.textContent = `${skillStatusLabel(state)} · ${state.evidenceCount} evidence · ${state.correctCount} correct`;
+    renderMath(
+      meta,
+      `${skillStatusLabel(state)} · ${state.evidenceCount} evidence · ${state.correctCount} correct`,
+    );
     container.append(meta);
   } else {
     const meta = document.createElement('span');
     meta.className = 'skill-meta';
-    meta.textContent = 'Not assessed in this slice';
+    renderMath(meta, 'Not assessed in this slice');
     container.append(meta);
   }
 
@@ -130,7 +137,7 @@ export function renderCriteriaList(
 
   const heading = document.createElement('p');
   heading.className = 'criteria-heading';
-  heading.textContent = 'Provisional rubric signals';
+  renderMath(heading, 'Provisional rubric signals');
   container.append(heading);
 
   const list = document.createElement('ul');
@@ -142,15 +149,18 @@ export function renderCriteriaList(
 
     const mark = document.createElement('span');
     mark.className = 'criterion-mark';
-    mark.textContent = matched ? '✓' : '·';
+    renderMath(mark, matched ? '✓' : '·');
     mark.setAttribute('aria-hidden', 'true');
 
     const copy = document.createElement('span');
     copy.className = 'criterion-copy';
     const label = document.createElement('strong');
-    label.textContent = `${criterion.label} · ${Math.round(criterion.weight * 100)}%`;
+    renderMath(
+      label,
+      `${criterion.label} · ${Math.round(criterion.weight * 100)}%`,
+    );
     const description = document.createElement('span');
-    description.textContent = criterion.description;
+    renderMath(description, criterion.description);
     copy.append(label, description);
 
     item.append(mark, copy);
@@ -162,28 +172,37 @@ export function renderCriteriaList(
     for (const level of ['2', '1', '0'] as const) {
       const guide = document.createElement('p');
       guide.className = 'criteria-note';
-      guide.textContent = `Pack rubric ${level}/2: ${rubric.scoringGuide[level]}`;
+      renderMath(
+        guide,
+        `Pack rubric ${level}/2: ${rubric.scoringGuide[level]}`,
+      );
       container.append(guide);
     }
   }
   if (rubric.misconception) {
     const misconception = document.createElement('p');
     misconception.className = 'criteria-note';
-    misconception.textContent = `Misconception to check: ${rubric.misconception}`;
+    renderMath(
+      misconception,
+      `Misconception to check: ${rubric.misconception}`,
+    );
     container.append(misconception);
   }
 
   if (missingIds.length > 0) {
     const missing = document.createElement('p');
     missing.className = 'criteria-note';
-    missing.textContent = `Missing signals: ${missingIds.join(', ')}.`;
+    renderMath(missing, `Missing signals: ${missingIds.join(', ')}.`);
     container.append(missing);
   }
 
   if (rubric.provisional) {
     const note = document.createElement('p');
     note.className = 'criteria-note';
-    note.textContent = 'Authored rubric · not verified against course materials.';
+    renderMath(
+      note,
+      'Authored rubric · not verified against course materials.',
+    );
     container.append(note);
   }
 }
@@ -202,10 +221,10 @@ function appendSourceRow(
   head.className = 'source-head';
   const badge = document.createElement('span');
   badge.className = 'source-badge';
-  badge.textContent = status.label;
+  renderMath(badge, status.label);
   const detail = document.createElement('span');
   detail.className = 'source-detail';
-  detail.textContent = status.detail;
+  renderMath(detail, status.detail);
   head.append(badge, detail);
   row.append(head);
 
@@ -213,16 +232,19 @@ function appendSourceRow(
     const refNode = document.createElement('div');
     refNode.className = 'source-ref';
     const title = document.createElement('strong');
-    title.textContent = ref.title;
+    renderMath(title, ref.title);
     const meta = document.createElement('span');
-    meta.textContent = `${ref.kind.replace('-', ' ')} · ${ref.locator} · ${
-      ref.verified ? 'document listed' : 'unverified'
-    }`;
+    renderMath(
+      meta,
+      `${ref.kind.replace('-', ' ')} · ${ref.locator} · ${
+        ref.verified ? 'document listed' : 'unverified'
+      }`,
+    );
     refNode.append(title, meta);
     if (ref.note) {
       const note = document.createElement('p');
       note.className = 'source-note';
-      note.textContent = ref.note;
+      renderMath(note, ref.note);
       refNode.append(note);
     }
     row.append(refNode);
@@ -239,10 +261,14 @@ export function renderSourceBlock(
   container.replaceChildren();
   const heading = document.createElement('p');
   heading.className = 'source-heading';
-  heading.textContent = 'Sources & verification';
-  container.append(heading);
-  appendSourceRow(container, topicRefs, 'topic');
-  appendSourceRow(container, answerRefs, 'answer');
+  renderMath(heading, 'Sources & verification');
+  const details = document.createElement('details');
+  const summary = document.createElement('summary');
+  summary.textContent = 'Sources & verification';
+  details.append(summary);
+  appendSourceRow(details, topicRefs, 'topic');
+  appendSourceRow(details, answerRefs, 'answer');
+  container.append(details);
 }
 
 export function renderLearningContext(
@@ -254,11 +280,14 @@ export function renderLearningContext(
 
   const title = document.createElement('p');
   title.className = 'learning-context-title';
-  title.textContent = `${concept.id} · ${concept.title} · ${KIND_LABEL[learning.kind]}`;
+  renderMath(
+    title,
+    `${concept.id} · ${concept.title} · ${KIND_LABEL[learning.kind]}`,
+  );
 
   const objective = document.createElement('p');
   objective.className = 'learning-objective';
-  objective.textContent = `Objective: ${learning.learningObjective}`;
+  renderMath(objective, `Objective: ${learning.learningObjective}`);
 
   const topic = describeSourceStatus(learning.sourceRefs, 'topic');
   const answer = describeSourceStatus(learning.answerSourceRefs, 'answer');
@@ -268,11 +297,11 @@ export function renderLearningContext(
   const topicChip = document.createElement('span');
   topicChip.className = 'source-chip';
   topicChip.dataset.tone = topic.tone;
-  topicChip.textContent = `Topic source: ${topic.label}`;
+  renderMath(topicChip, `Topic source: ${topic.label}`);
   const answerChip = document.createElement('span');
   answerChip.className = 'source-chip';
   answerChip.dataset.tone = answer.tone;
-  answerChip.textContent = `Answer source: ${answer.label}`;
+  renderMath(answerChip, `Answer source: ${answer.label}`);
   chips.append(topicChip, answerChip);
 
   container.append(title, objective, chips);
@@ -289,19 +318,19 @@ export function renderRouteNote(
   const reason = document.createElement('span');
 
   if (!route) {
-    title.textContent = 'C2 adaptive path';
-    reason.textContent = 'No adaptive route selected yet.';
+    renderMath(title, 'C2 adaptive path');
+    renderMath(reason, 'No adaptive route selected yet.');
     container.append(title, reason);
     return;
   }
 
-  title.textContent = `C2 adaptive path · ${routeLabel(route)}`;
-  reason.textContent = route.reason;
+  renderMath(title, `C2 adaptive path · ${routeLabel(route)}`);
+  renderMath(reason, route.reason);
   container.append(title, reason);
 
   if (route.kind === 'clarification') {
     const prompt = document.createElement('span');
-    prompt.textContent = `Clarification prompt: ${route.prompt}`;
+    renderMath(prompt, `Clarification prompt: ${route.prompt}`);
     container.append(prompt);
   }
 }

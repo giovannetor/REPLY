@@ -1,3 +1,4 @@
+import { renderMath } from './math';
 import type {
   Concept,
   ConceptId,
@@ -51,11 +52,7 @@ export interface DiagnosticPanelCallbacks {
 }
 
 type DiagnosticPhase =
-  | 'answering'
-  | 'evaluating'
-  | 'feedback'
-  | 'clarification'
-  | 'summary';
+  'answering' | 'evaluating' | 'feedback' | 'clarification' | 'summary';
 
 export class DiagnosticPanel {
   private readonly screen = mustGet<HTMLElement>('diagnostic-screen');
@@ -64,15 +61,22 @@ export class DiagnosticPanel {
   private readonly conceptTitle = mustGet<HTMLElement>('diagnostic-concept');
   private readonly badge = mustGet<HTMLElement>('diagnostic-badge');
 
-  private readonly questionBlock = mustGet<HTMLElement>('diagnostic-question-block');
+  private readonly questionBlock = mustGet<HTMLElement>(
+    'diagnostic-question-block',
+  );
   private readonly prompt = mustGet<HTMLElement>('diagnostic-prompt');
   private readonly options = mustGet<HTMLElement>('diagnostic-options');
-  private readonly explanation = mustGet<HTMLTextAreaElement>('diagnostic-explanation');
+  private readonly explanation = mustGet<HTMLTextAreaElement>(
+    'diagnostic-explanation',
+  );
   private readonly hint = mustGet<HTMLElement>('diagnostic-explanation-hint');
   private readonly status = mustGet<HTMLElement>('diagnostic-status');
-  private readonly submitButton = mustGet<HTMLButtonElement>('diagnostic-submit');
+  private readonly submitButton =
+    mustGet<HTMLButtonElement>('diagnostic-submit');
 
-  private readonly clarificationBlock = mustGet<HTMLElement>('diagnostic-clarification');
+  private readonly clarificationBlock = mustGet<HTMLElement>(
+    'diagnostic-clarification',
+  );
   private readonly clarificationPrompt = mustGet<HTMLElement>(
     'diagnostic-clarification-prompt',
   );
@@ -89,7 +93,9 @@ export class DiagnosticPanel {
   private readonly feedbackBlock = mustGet<HTMLElement>('diagnostic-feedback');
   private readonly verdict = mustGet<HTMLElement>('diagnostic-verdict');
   private readonly evaluatorLine = mustGet<HTMLElement>('diagnostic-evaluator');
-  private readonly feedbackText = mustGet<HTMLElement>('diagnostic-feedback-text');
+  private readonly feedbackText = mustGet<HTMLElement>(
+    'diagnostic-feedback-text',
+  );
   private readonly criteria = mustGet<HTMLElement>('diagnostic-criteria');
   private readonly source = mustGet<HTMLElement>('diagnostic-source');
   private readonly skillReadout = mustGet<HTMLElement>('diagnostic-skill');
@@ -97,9 +103,15 @@ export class DiagnosticPanel {
   private readonly actions = mustGet<HTMLElement>('diagnostic-actions');
 
   private readonly summaryBlock = mustGet<HTMLElement>('diagnostic-summary');
-  private readonly summaryList = mustGet<HTMLElement>('diagnostic-summary-list');
-  private readonly summaryRoute = mustGet<HTMLElement>('diagnostic-summary-route');
-  private readonly summarySkills = mustGet<HTMLElement>('diagnostic-summary-skills');
+  private readonly summaryList = mustGet<HTMLElement>(
+    'diagnostic-summary-list',
+  );
+  private readonly summaryRoute = mustGet<HTMLElement>(
+    'diagnostic-summary-route',
+  );
+  private readonly summarySkills = mustGet<HTMLElement>(
+    'diagnostic-summary-skills',
+  );
   private readonly beginButton = mustGet<HTMLButtonElement>('diagnostic-begin');
 
   private question: DiagnosticQuestion | null = null;
@@ -109,10 +121,16 @@ export class DiagnosticPanel {
 
   constructor(private readonly callbacks: DiagnosticPanelCallbacks) {
     this.submitButton.addEventListener('click', () => this.submitAnswer());
-    this.clarificationSubmit.addEventListener('click', () => this.submitClarification());
+    this.clarificationSubmit.addEventListener('click', () =>
+      this.submitClarification(),
+    );
     this.explanation.addEventListener('input', () => this.updateSubmitState());
-    this.clarificationInput.addEventListener('input', () => this.updateClarificationState());
-    this.beginButton.addEventListener('click', () => this.callbacks.onBeginDungeon());
+    this.clarificationInput.addEventListener('input', () =>
+      this.updateClarificationState(),
+    );
+    this.beginButton.addEventListener('click', () =>
+      this.callbacks.onBeginDungeon(),
+    );
   }
 
   isOpen(): boolean {
@@ -131,18 +149,27 @@ export class DiagnosticPanel {
     this.phase = 'answering';
     this.clarificationMode = false;
 
-    this.progress.textContent = `Diagnostic · ${index + 1} / ${total}${question.courseContent ? ` · ${question.id}` : ''}`;
-    this.conceptTitle.textContent = `${concept.id} · ${concept.title}`;
+    renderMath(
+      this.progress,
+      `Diagnostic · ${index + 1} / ${total} · ${question.id}`,
+    );
+    renderMath(this.conceptTitle, `${concept.id} · ${concept.title}`);
     this.badge.textContent =
       skill.evidenceCount === 0
         ? 'Provisional · not yet scored'
         : `Provisional skill: ${formatMastery(skill)}`;
 
-    this.prompt.textContent = question.prompt;
+    renderMath(this.prompt, question.prompt);
     if (question.courseContent) {
-      this.badge.textContent = `Pack: ${question.courseContent.question.status} · provisional / unverified`;
+      renderMath(
+        this.badge,
+        `Pack: ${question.courseContent.question.status} · provisional / unverified`,
+      );
     }
-    this.hint.textContent = question.explanationHint ?? question.explanationPrompt;
+    renderMath(
+      this.hint,
+      question.explanationHint ?? question.explanationPrompt,
+    );
     this.explanation.value = '';
     this.clarificationInput.value = '';
     this.hideStatus(this.status);
@@ -183,7 +210,7 @@ export class DiagnosticPanel {
     this.hideBlock(this.summaryBlock);
     this.showBlock(this.clarificationBlock);
 
-    this.clarificationPrompt.textContent = `${prompt} (${evaluator})`;
+    renderMath(this.clarificationPrompt, `${prompt} (${evaluator})`);
     this.clarificationInput.value = '';
     this.hideStatus(this.clarificationStatus);
     this.clarificationSubmit.disabled = false;
@@ -200,7 +227,10 @@ export class DiagnosticPanel {
     this.hideBlock(this.summaryBlock);
     this.showBlock(this.feedbackBlock);
 
-    this.verdict.textContent = view.correct ? 'Answer correct.' : 'Answer incorrect.';
+    renderMath(
+      this.verdict,
+      view.correct ? 'Answer correct.' : 'Answer incorrect.',
+    );
     this.verdict.classList.toggle('is-correct', view.correct);
     this.verdict.classList.toggle('is-incorrect', !view.correct);
 
@@ -215,16 +245,20 @@ export class DiagnosticPanel {
     if (view.evaluation.fallbackReason) {
       parts.push(`fallback reason: ${view.evaluation.fallbackReason}`);
     }
-    this.evaluatorLine.textContent = parts.join(' · ');
+    renderMath(this.evaluatorLine, parts.join(' · '));
 
-    this.feedbackText.textContent = view.evaluation.feedback;
+    renderMath(this.feedbackText, view.evaluation.feedback);
     renderCriteriaList(
       this.criteria,
       view.rubric,
       view.evaluation.matchedCriteria,
       view.evaluation.missingCriteria,
     );
-    renderSourceBlock(this.source, view.question.sourceRefs, view.question.answerSourceRefs);
+    renderSourceBlock(
+      this.source,
+      view.question.sourceRefs,
+      view.question.answerSourceRefs,
+    );
     renderSkillReadout(this.skillReadout, view.skill, view.concept);
 
     if (view.route) {
@@ -237,7 +271,7 @@ export class DiagnosticPanel {
     const next = document.createElement('button');
     next.type = 'button';
     next.className = 'btn btn-primary';
-    next.textContent = view.isLast ? 'See diagnostic summary' : 'Next question';
+    renderMath(next, view.isLast ? 'See diagnostic summary' : 'Next question');
     next.addEventListener('click', () => this.callbacks.onContinue());
     this.actions.append(next);
 
@@ -261,24 +295,29 @@ export class DiagnosticPanel {
       const head = document.createElement('div');
       head.className = 'summary-head';
       const title = document.createElement('strong');
-      title.textContent = `${entry.concept.id} · ${entry.concept.shortTitle}`;
+      renderMath(title, `${entry.concept.id} · ${entry.concept.shortTitle}`);
       const mastery = document.createElement('span');
       mastery.className = 'summary-mastery';
-      mastery.textContent = formatMastery(entry.skill);
+      renderMath(mastery, formatMastery(entry.skill));
       head.append(title, mastery);
 
       const meta = document.createElement('span');
       meta.className = 'summary-meta';
-      meta.textContent = `${entry.answer.correct ? 'Answer correct' : 'Answer incorrect'} · ${
-        entry.answer.evaluation.reasoning
-      } reasoning · ${evaluatorLabel(entry.answer.evaluation.evaluator)}`;
+      renderMath(
+        meta,
+        `${entry.answer.correct ? 'Answer correct' : 'Answer incorrect'} · ${
+          entry.answer.evaluation.reasoning
+        } reasoning · ${evaluatorLabel(entry.answer.evaluation.evaluator)}`,
+      );
 
       item.append(head, meta);
       this.summaryList.append(item);
     }
 
     renderRouteNote(this.summaryRoute, view.route);
-    renderSkillList(this.summarySkills, view.skills, view.concepts, { compact: false });
+    renderSkillList(this.summarySkills, view.skills, view.concepts, {
+      compact: false,
+    });
 
     this.screen.classList.remove('is-hidden');
     this.panel.scrollTop = 0;
@@ -307,10 +346,10 @@ export class DiagnosticPanel {
 
       const key = document.createElement('span');
       key.className = 'option-key';
-      key.textContent = String.fromCharCode(65 + index);
+      renderMath(key, String.fromCharCode(65 + index));
       const label = document.createElement('span');
       label.className = 'option-label';
-      label.textContent = option.label;
+      renderMath(label, option.label);
       button.append(key, label);
 
       button.addEventListener('click', () => {
@@ -318,7 +357,9 @@ export class DiagnosticPanel {
           return;
         }
         this.selectedOptionId = option.id;
-        for (const candidate of this.options.querySelectorAll<HTMLButtonElement>('.option')) {
+        for (const candidate of this.options.querySelectorAll<HTMLButtonElement>(
+          '.option',
+        )) {
           const selected = candidate.dataset.optionId === option.id;
           candidate.classList.toggle('is-selected', selected);
           candidate.setAttribute('aria-pressed', String(selected));
@@ -347,7 +388,10 @@ export class DiagnosticPanel {
       false,
     );
     this.submitButton.disabled = true;
-    this.callbacks.onSubmit(this.selectedOptionId, this.explanation.value.trim());
+    this.callbacks.onSubmit(
+      this.selectedOptionId,
+      this.explanation.value.trim(),
+    );
   }
 
   private submitClarification(): void {
@@ -376,17 +420,22 @@ export class DiagnosticPanel {
 
   private updateClarificationState(): void {
     this.clarificationSubmit.disabled =
-      this.phase === 'evaluating' || this.clarificationInput.value.trim().length === 0;
+      this.phase === 'evaluating' ||
+      this.clarificationInput.value.trim().length === 0;
   }
 
-  private showStatus(element: HTMLElement, message: string, isError: boolean): void {
-    element.textContent = message;
+  private showStatus(
+    element: HTMLElement,
+    message: string,
+    isError: boolean,
+  ): void {
+    renderMath(element, message);
     element.classList.remove('is-hidden');
     element.classList.toggle('is-error', isError);
   }
 
   private hideStatus(element: HTMLElement): void {
-    element.textContent = '';
+    renderMath(element, '');
     element.classList.add('is-hidden');
     element.classList.remove('is-error');
   }

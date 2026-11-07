@@ -1,3 +1,4 @@
+import { renderMath } from './math';
 import type { Challenge, SequenceChallenge } from '../domain/challenge';
 import type { Concept, LearningChallenge } from '../domain/learning';
 import {
@@ -15,7 +16,10 @@ import {
   toggleSequenceItem,
   type ChallengeState,
 } from '../domain/challengeState';
-import { renderLearningContext as renderLearningContextView, renderSourceBlock } from './learningRender';
+import {
+  renderLearningContext as renderLearningContextView,
+  renderSourceBlock,
+} from './learningRender';
 import { mustGet } from './dom';
 
 export type ChallengeMode = 'door' | 'boss';
@@ -35,13 +39,18 @@ export class ChallengePanel {
   private readonly closeButton = mustGet<HTMLButtonElement>('challenge-close');
 
   private readonly loadingBlock = mustGet<HTMLElement>('challenge-loading');
-  private readonly cancelLoadingButton =
-    mustGet<HTMLButtonElement>('challenge-cancel-loading');
+  private readonly cancelLoadingButton = mustGet<HTMLButtonElement>(
+    'challenge-cancel-loading',
+  );
 
   private readonly errorBlock = mustGet<HTMLElement>('challenge-error');
-  private readonly errorMessage = mustGet<HTMLElement>('challenge-error-message');
+  private readonly errorMessage = mustGet<HTMLElement>(
+    'challenge-error-message',
+  );
   private readonly retryButton = mustGet<HTMLButtonElement>('challenge-retry');
-  private readonly backErrorButton = mustGet<HTMLButtonElement>('challenge-back-error');
+  private readonly backErrorButton = mustGet<HTMLButtonElement>(
+    'challenge-back-error',
+  );
 
   private readonly questionBlock = mustGet<HTMLElement>('challenge-question');
   private readonly learningBlock = mustGet<HTMLElement>('challenge-learning');
@@ -53,7 +62,8 @@ export class ChallengePanel {
   private readonly sequencePool = mustGet<HTMLElement>('sequence-pool');
   private readonly sequenceReset = mustGet<HTMLButtonElement>('sequence-reset');
   private readonly attempts = mustGet<HTMLElement>('challenge-attempts');
-  private readonly submitButton = mustGet<HTMLButtonElement>('challenge-submit');
+  private readonly submitButton =
+    mustGet<HTMLButtonElement>('challenge-submit');
 
   private readonly feedbackBlock = mustGet<HTMLElement>('challenge-feedback');
   private readonly verdict = mustGet<HTMLElement>('feedback-verdict');
@@ -69,11 +79,19 @@ export class ChallengePanel {
 
   constructor(private readonly callbacks: ChallengePanelCallbacks) {
     this.closeButton.addEventListener('click', () => this.callbacks.onCancel());
-    this.cancelLoadingButton.addEventListener('click', () => this.callbacks.onCancel());
-    this.backErrorButton.addEventListener('click', () => this.callbacks.onCancel());
-    this.retryButton.addEventListener('click', () => this.callbacks.onRetryLoad());
+    this.cancelLoadingButton.addEventListener('click', () =>
+      this.callbacks.onCancel(),
+    );
+    this.backErrorButton.addEventListener('click', () =>
+      this.callbacks.onCancel(),
+    );
+    this.retryButton.addEventListener('click', () =>
+      this.callbacks.onRetryLoad(),
+    );
     this.submitButton.addEventListener('click', () => this.submit());
-    this.sequenceReset.addEventListener('click', () => this.handleSequenceReset());
+    this.sequenceReset.addEventListener('click', () =>
+      this.handleSequenceReset(),
+    );
 
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && this.isOpen() && this.mode === 'door') {
@@ -102,10 +120,12 @@ export class ChallengePanel {
     this.concept = null;
     this.renderLearningContext();
     this.feedbackSource.replaceChildren();
-    this.eyebrow.textContent = eyebrow;
-    this.title.textContent = title;
-    this.errorMessage.textContent = '';
+    renderMath(this.eyebrow, eyebrow);
+    renderMath(this.title, title);
+    renderMath(this.errorMessage, '');
     this.panel.dataset.mode = mode;
+    this.screen.dataset.mode = mode;
+    if (mode === 'boss') mustGet('companion-phase').textContent = eyebrow;
     this.syncChrome();
     this.screen.classList.remove('is-hidden');
     this.panel.scrollTop = 0;
@@ -122,12 +142,14 @@ export class ChallengePanel {
     this.learning = learning ?? null;
     this.concept = concept ?? null;
     this.renderLearningContext();
-    this.title.textContent = challenge.title;
+    renderMath(this.title, challenge.title);
+    this.title.dataset.challengeId = challenge.id;
+    renderMath(this.eyebrow, `${this.eyebrow.textContent} · ${challenge.id}`);
     if (challenge.hint) {
-      this.hint.textContent = `Hint: ${challenge.hint}`;
+      renderMath(this.hint, `Hint: ${challenge.hint}`);
       this.hint.classList.remove('is-hidden');
     } else {
-      this.hint.textContent = '';
+      renderMath(this.hint, '');
       this.hint.classList.add('is-hidden');
     }
     this.render();
@@ -136,7 +158,7 @@ export class ChallengePanel {
 
   showError(message: string): void {
     this.state = loadFailed(this.state, message);
-    this.errorMessage.textContent = message;
+    renderMath(this.errorMessage, message);
     this.render();
     this.focusFirst();
   }
@@ -172,13 +194,25 @@ export class ChallengePanel {
   }
 
   private render(): void {
-    this.loadingBlock.classList.toggle('is-hidden', this.state.phase !== 'loading');
+    this.loadingBlock.classList.toggle(
+      'is-hidden',
+      this.state.phase !== 'loading',
+    );
     this.errorBlock.classList.toggle('is-hidden', this.state.phase !== 'error');
-    this.questionBlock.classList.toggle('is-hidden', this.state.phase !== 'ready');
-    this.feedbackBlock.classList.toggle('is-hidden', this.state.phase !== 'feedback');
+    this.questionBlock.classList.toggle(
+      'is-hidden',
+      this.state.phase !== 'ready',
+    );
+    this.feedbackBlock.classList.toggle(
+      'is-hidden',
+      this.state.phase !== 'feedback',
+    );
 
     if (this.state.phase === 'error') {
-      this.errorMessage.textContent = this.state.error ?? 'Unknown archive error.';
+      renderMath(
+        this.errorMessage,
+        this.state.error ?? 'Unknown archive error.',
+      );
     }
     if (this.state.phase === 'ready') {
       this.renderQuestion();
@@ -194,15 +228,17 @@ export class ChallengePanel {
       return;
     }
 
-    this.prompt.textContent = challenge.prompt;
+    renderMath(this.prompt, challenge.prompt);
     this.renderLearningContext();
     this.options.replaceChildren();
     this.sequenceSelected.replaceChildren();
     this.sequencePool.replaceChildren();
 
     const attemptLabel =
-      this.state.attempts === 0 ? 'First attempt' : `Attempt ${this.state.attempts + 1}`;
-    this.attempts.textContent = `${attemptLabel} · worth ${challenge.xp} XP`;
+      this.state.attempts === 0
+        ? 'First attempt'
+        : `Attempt ${this.state.attempts + 1}`;
+    renderMath(this.attempts, `${attemptLabel} · worth ${challenge.xp} XP`);
 
     const isSequence = challenge.type === 'sequence';
     this.sequence.classList.toggle('is-hidden', !isSequence);
@@ -247,13 +283,16 @@ export class ChallengePanel {
           : String.fromCharCode(65 + index);
       const label = document.createElement('span');
       label.className = 'option-label';
-      label.textContent = option.label;
+      renderMath(label, option.label);
       button.append(key, label);
 
       button.addEventListener('click', () => {
         this.state = selectOption(this.state, option.id);
-        for (const candidate of this.options.querySelectorAll<HTMLButtonElement>('.option')) {
-          const isSelected = candidate.dataset.optionId === this.state.selectedOptionId;
+        for (const candidate of this.options.querySelectorAll<HTMLButtonElement>(
+          '.option',
+        )) {
+          const isSelected =
+            candidate.dataset.optionId === this.state.selectedOptionId;
           candidate.classList.toggle('is-selected', isSelected);
           candidate.setAttribute('aria-pressed', String(isSelected));
         }
@@ -276,9 +315,9 @@ export class ChallengePanel {
       const row = document.createElement('li');
       const number = document.createElement('span');
       number.className = 'seq-num';
-      number.textContent = String(index + 1);
+      renderMath(number, String(index + 1));
       const label = document.createElement('span');
-      label.textContent = item.label;
+      renderMath(label, item.label);
       row.append(number, label);
       this.sequenceSelected.append(row);
     });
@@ -290,7 +329,7 @@ export class ChallengePanel {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'seq-item';
-      button.textContent = item.label;
+      renderMath(button, item.label);
       button.addEventListener('click', () => {
         this.state = toggleSequenceItem(this.state, item.id);
         this.renderQuestion();
@@ -319,7 +358,10 @@ export class ChallengePanel {
     }
     this.state = next;
     this.render();
-    this.callbacks.onAttemptEvaluated(this.state.result === 'correct', this.state);
+    this.callbacks.onAttemptEvaluated(
+      this.state.result === 'correct',
+      this.state,
+    );
   }
 
   private renderFeedback(): void {
@@ -329,11 +371,14 @@ export class ChallengePanel {
     }
 
     const correct = this.state.result === 'correct';
-    this.verdict.textContent = correct ? 'Correct.' : 'Not quite.';
+    renderMath(this.verdict, correct ? 'Correct.' : 'Not quite.');
     this.verdict.classList.toggle('is-correct', correct);
     this.verdict.classList.toggle('is-incorrect', !correct);
-    this.explanation.textContent = challenge.explanation;
-    this.correctAnswer.textContent = `Correct answer:\n${correctAnswerText(this.state)}`;
+    renderMath(this.explanation, challenge.explanation);
+    renderMath(
+      this.correctAnswer,
+      `Correct answer:\n${correctAnswerText(this.state)}`,
+    );
     renderSourceBlock(
       this.feedbackSource,
       this.learning?.sourceRefs ?? [],
@@ -343,7 +388,9 @@ export class ChallengePanel {
 
     if (this.mode === 'boss') {
       this.feedbackActions.append(
-        this.makeButton('Continue', 'btn btn-primary', () => this.callbacks.onContinue()),
+        this.makeButton('Continue', 'btn btn-primary', () =>
+          this.callbacks.onContinue(),
+        ),
       );
     } else if (correct) {
       this.feedbackActions.append(
@@ -359,7 +406,9 @@ export class ChallengePanel {
           this.render();
           this.focusFirst();
         }),
-        this.makeButton('Leave door', 'btn btn-ghost', () => this.callbacks.onCancel()),
+        this.makeButton('Leave door', 'btn btn-ghost', () =>
+          this.callbacks.onCancel(),
+        ),
       );
     }
 
@@ -374,7 +423,7 @@ export class ChallengePanel {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = className;
-    button.textContent = label;
+    renderMath(button, label);
     button.addEventListener('click', onClick);
     return button;
   }

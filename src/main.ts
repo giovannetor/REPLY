@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import './style.css';
+import './space.css';
 import {
   describeProviderError,
   isAbortError as isChallengeAbortError,
