@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bossfight.ai/schemas/challenge.schema.json",
+  "title": "BossFight AI Challenge",
+  "description": "Data-only educational challenge contract. The game validates and rebuilds this object; it never executes payload content.",
+  "oneOf": [
+    { "$ref": "#/$defs/multipleChoiceChallenge" },
+    { "$ref": "#/$defs/sequenceChallenge" },
+    { "$ref": "#/$defs/trueFalseChallenge" }
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "common": {
+      "type": "object",
+      "required": ["id", "type", "topic", "title", "prompt", "explanation", "xp"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": {
+          "type": "string",
+          "enum": ["multiple-choice", "sequence", "true-false"]
+        },
+        "topic": {
+          "type": "string",
+          "enum": ["logic", "order", "truth", "boss"]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "hint": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "xp": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        }
+      }
+    },
+    "labelledEntry": {
+      "type": "object",
+      "required": ["id", "label"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "additionalProperties": false
+    },
+    "multipleChoiceChallenge": {
+      "allOf": [{ "$ref": "#/$defs/common" }],
+      "required": ["type", "options", "correctOptionId"],
+      "properties": {
+        "type": { "const": "multiple-choice" },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 6,
+          "items": { "$ref": "#/$defs/labelledEntry" }
+        },
+        "correctOptionId": { "$ref": "#/$defs/id" }
+      },
+      "unevaluatedProperties": false
+    },
+    "sequenceChallenge": {
+      "allOf": [{ "$ref": "#/$defs/common" }],
+      "required": ["type", "items", "correctOrder"],
+      "properties": {
+        "type": { "const": "sequence" },
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 8,
+          "items": { "$ref": "#/$defs/labelledEntry" }
+        },
+        "correctOrder": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 8,
+          "items": { "$ref": "#/$defs/id" },
+          "uniqueItems": true
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "trueFalseChallenge": {
+      "allOf": [{ "$ref": "#/$defs/common" }],
+      "required": ["type", "correctAnswer"],
+      "properties": {
+        "type": { "const": "true-false" },
+        "correctAnswer": { "type": "boolean" }
+      },
+      "unevaluatedProperties": false
+    }
+  }
+}

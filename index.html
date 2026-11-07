@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#05070f" />
+    <meta
+      name="description"
+      content="BossFight AI — a playable AI-directed dungeon prototype for university courses."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>BossFight AI · Motori per Aeromobili</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="game-root" aria-hidden="true"></div>
+
+      <header id="hud" class="hud is-hidden" aria-label="Run status">
+        <div class="hud-brand">
+          <span class="sigil" aria-hidden="true">◆</span>
+          <div class="hud-brand-text">
+            <strong id="hud-course">Motori per Aeromobili</strong>
+            <span>BossFight AI · <span id="hud-course-code">MOTORI</span></span>
+          </div>
+        </div>
+        <div class="hud-progress">
+          <span id="hud-doors">Doors cleared 0 / 3</span>
+          <div class="pips" id="hud-pips" aria-hidden="true">
+            <span class="pip pip-logic" data-door="logic" title="Door of Stream Force"></span>
+            <span class="pip pip-order" data-door="order" title="Door of the Intake"></span>
+            <span class="pip pip-truth" data-door="truth" title="Door of the Combustor"></span>
+          </div>
+        </div>
+        <div class="hud-controls">
+          <kbd>WASD</kbd> / <kbd>Arrows</kbd> move · <kbd>E</kbd> interact
+        </div>
+      </header>
+
+      <div id="boss-hud" class="boss-hud is-hidden" aria-label="Boss status">
+        <div class="boss-hud-top">
+          <span class="boss-name">The Registrar</span>
+          <span id="boss-round">Round 1 / 3</span>
+        </div>
+        <div class="hp-track"><div id="boss-hp-fill" class="hp-fill"></div></div>
+        <div class="boss-hud-bottom">
+          <span>Boss HP <strong id="boss-hp-text">3 / 3</strong></span>
+          <span>Resolve <strong id="player-hp-text">3 / 3</strong></span>
+        </div>
+      </div>
+
+      <aside
+        id="skills-panel"
+        class="skills-panel is-hidden"
+        aria-label="Provisional skill progress"
+      >
+        <div class="skills-panel-head">
+          <span>Provisional skills</span>
+          <span class="badge badge-warn">Unverified</span>
+        </div>
+        <ul id="skills-list" class="skill-list"></ul>
+      </aside>
+
+      <div id="toast" class="toast is-hidden" role="status"></div>
+
+      <main id="overlay-root" class="overlay-root">
+        <section id="start-screen" class="screen start-screen">
+          <div class="ambient ambient-a" aria-hidden="true"></div>
+          <div class="ambient ambient-b" aria-hidden="true"></div>
+          <div class="panel start-panel">
+            <div class="brand-mark"><span class="brand-rune">◆</span> BossFight AI</div>
+            <p class="eyebrow">Interactive course prototype</p>
+            <h1 id="start-course">Motori per Aeromobili</h1>
+            <p class="course-line">
+              <span id="start-course-code">MOTORI</span> ·
+              <span id="start-institution">Politecnico di Torino</span>
+            </p>
+            <p id="start-lede" class="lede"></p>
+            <div class="brief-grid">
+              <div class="brief">
+                <span class="brief-num">03</span>
+                <span>diagnostic questions</span>
+              </div>
+              <div class="brief">
+                <span class="brief-num">03</span>
+                <span>doors · C1–C3</span>
+              </div>
+              <div class="brief">
+                <span class="brief-num">03</span>
+                <span>boss phases</span>
+              </div>
+            </div>
+            <button id="start-btn" class="btn btn-primary btn-wide" type="button">
+              Begin diagnostic
+            </button>
+            <p class="fineprint">
+              <span id="provider-name">Local mock archive</span> · Arrow keys / WASD to move ·
+              <kbd>E</kbd> to interact
+            </p>
+            <p id="provider-note" class="provider-note is-hidden"></p>
+            <p class="start-disclaimer">
+              All questions, answers, rubrics and mastery estimates are authored prototype
+              content. The one-page framework summary is a topic source only; it does not
+              verify questions, answers, rubrics or slide references.
+            </p>
+          </div>
+        </section>
+
+        <section
+          id="diagnostic-screen"
+          class="screen diagnostic-screen is-hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="diagnostic-concept"
+          aria-live="polite"
+        >
+          <div id="diagnostic-panel" class="panel diagnostic-panel">
+            <header class="panel-head">
+              <div>
+                <p id="diagnostic-progress" class="eyebrow">Diagnostic · 1 / 3</p>
+                <h2 id="diagnostic-concept">Concept</h2>
+              </div>
+              <span id="diagnostic-badge" class="badge badge-warn">Provisional</span>
+            </header>
+
+            <div id="diagnostic-question-block" class="state-block">
+              <p id="diagnostic-prompt" class="prompt"></p>
+              <div id="diagnostic-options" class="options"></div>
+              <label class="field-label" for="diagnostic-explanation">
+                Explain your reasoning
+              </label>
+              <textarea
+                id="diagnostic-explanation"
+                class="text-input"
+                rows="4"
+                maxlength="4000"
+                placeholder="State the mechanism, not just the conclusion."
+              ></textarea>
+              <p id="diagnostic-explanation-hint" class="hint"></p>
+              <p id="diagnostic-status" class="inline-status is-hidden" role="status"></p>
+              <div class="btn-row">
+                <button id="diagnostic-submit" class="btn btn-primary" type="button" disabled>
+                  Evaluate answer
+                </button>
+              </div>
+            </div>
+
+            <div id="diagnostic-clarification" class="state-block is-hidden">
+              <p class="error-kicker">Clarification needed</p>
+              <p id="diagnostic-clarification-prompt" class="state-title"></p>
+              <label class="field-label" for="diagnostic-clarification-input">
+                Add one or two sentences
+              </label>
+              <textarea
+                id="diagnostic-clarification-input"
+                class="text-input"
+                rows="3"
+                maxlength="4000"
+              ></textarea>
+              <p
+                id="diagnostic-clarification-status"
+                class="inline-status is-hidden"
+                role="status"
+              ></p>
+              <div class="btn-row">
+                <button
+                  id="diagnostic-clarification-submit"
+                  class="btn btn-primary"
+                  type="button"
+                >
+                  Send clarification
+                </button>
+              </div>
+            </div>
+
+            <div id="diagnostic-feedback" class="state-block is-hidden">
+              <p id="diagnostic-verdict" class="verdict"></p>
+              <p id="diagnostic-evaluator" class="evaluator-line"></p>
+              <p id="diagnostic-feedback-text" class="muted"></p>
+              <div id="diagnostic-criteria" class="criteria-list"></div>
+              <div id="diagnostic-source" class="source-block"></div>
+              <div id="diagnostic-skill" class="skill-readout"></div>
+              <div id="diagnostic-route" class="route-note is-hidden"></div>
+              <div id="diagnostic-actions" class="btn-row"></div>
+            </div>
+
+            <div id="diagnostic-summary" class="state-block is-hidden">
+              <p class="state-title">Diagnostic complete</p>
+              <p class="muted">
+                These mastery estimates are provisional. They are based on authored prototype
+                rubrics, not verified course materials.
+              </p>
+              <ul id="diagnostic-summary-list" class="summary-list"></ul>
+              <div id="diagnostic-summary-route" class="route-note"></div>
+              <ul id="diagnostic-summary-skills" class="skill-list"></ul>
+              <button id="diagnostic-begin" class="btn btn-primary btn-wide" type="button">
+                Enter the dungeon
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="challenge-screen"
+          class="screen challenge-screen is-hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="challenge-title"
+          aria-live="polite"
+        >
+          <div id="challenge-panel" class="panel challenge-panel">
+            <header class="panel-head">
+              <div>
+                <p id="challenge-eyebrow" class="eyebrow">Door of Stream Force</p>
+                <h2 id="challenge-title">Challenge</h2>
+              </div>
+              <button
+                id="challenge-close"
+                class="icon-btn"
+                type="button"
+                aria-label="Leave challenge"
+              >
+                ×
+              </button>
+            </header>
+
+            <div id="challenge-loading" class="state-block">
+              <div class="loader" aria-hidden="true"></div>
+              <p class="state-title">Consulting the archive…</p>
+              <p class="muted">Fetching and validating challenge data.</p>
+              <button id="challenge-cancel-loading" class="btn btn-ghost" type="button">
+                Back to dungeon
+              </button>
+            </div>
+
+            <div id="challenge-error" class="state-block is-hidden">
+              <p class="error-kicker">Archive error</p>
+              <p class="state-title">The archive is unreachable.</p>
+              <p id="challenge-error-message" class="muted"></p>
+              <div class="btn-row">
+                <button id="challenge-retry" class="btn btn-primary" type="button">Retry</button>
+                <button id="challenge-back-error" class="btn btn-ghost" type="button">
+                  Back to dungeon
+                </button>
+              </div>
+            </div>
+
+            <div id="challenge-question" class="state-block is-hidden">
+              <p id="challenge-prompt" class="prompt"></p>
+              <div id="challenge-learning" class="learning-context is-hidden"></div>
+              <p id="challenge-hint" class="hint is-hidden"></p>
+              <div id="challenge-options" class="options"></div>
+              <div id="challenge-sequence" class="sequence is-hidden">
+                <p class="instruction">Click the steps in the correct order.</p>
+                <ol id="sequence-selected" class="sequence-selected"></ol>
+                <div id="sequence-pool" class="sequence-pool"></div>
+                <button id="sequence-reset" class="link-btn" type="button">Reset order</button>
+              </div>
+              <p id="challenge-attempts" class="attempts"></p>
+              <div class="btn-row">
+                <button id="challenge-submit" class="btn btn-primary" type="button" disabled>
+                  Submit answer
+                </button>
+              </div>
+            </div>
+
+            <div id="challenge-feedback" class="state-block is-hidden">
+              <p id="feedback-verdict" class="verdict"></p>
+              <p id="feedback-explanation" class="muted"></p>
+              <p id="feedback-correct" class="correct-answer"></p>
+              <div id="feedback-source" class="source-block"></div>
+              <div id="feedback-actions" class="btn-row"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="result-screen" class="screen result-screen is-hidden">
+          <div class="panel result-panel">
+            <p id="result-eyebrow" class="eyebrow">Run complete</p>
+            <h1 id="result-title">Victory</h1>
+            <p id="result-subtitle" class="lede"></p>
+            <ul id="result-challenges" class="result-list"></ul>
+            <div id="result-stats" class="stat-grid"></div>
+            <h2 class="result-skills-title">Provisional skills</h2>
+            <ul id="result-skills" class="skill-list result-skills"></ul>
+            <button id="restart-btn" class="btn btn-primary btn-wide" type="button">
+              Run it again
+            </button>
+            <p class="fineprint">
+              Prototype run · progress resets when you restart. Skill estimates are provisional
+              and unverified.
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,247 @@
+{
+  "concept_id": "C2",
+  "concept_name": "Supersonic Intake Operation & Matching",
+  "source_document": "appunti motori uniti (2)_2.pdf",
+  "questions": [
+    {
+      "id": "Q_D1",
+      "tier": "Diagnostic",
+      "difficulty": 1,
+      "question": "Why is Ram efficiency (\\epsilon_d = p_1^0 / p_0^0) considered a deceptive metric at low Mach numbers, and what parameter corrects this?",
+      "correct_answer": "Ram efficiency compares total pressures and can remain high even during severe flow breakdown. Adiabatic efficiency (\\eta_d) corrects this by referencing ambient static pressure, ensuring efficiency drops to zero if total pressure collapses to ambient levels.",
+      "incorrect_answers": [
+        "Ram efficiency ignores kinetic energy, so internal friction is tracked instead using isentropic efficiency.",
+        "Ram efficiency is only valid for internal compression, whereas external compression requires purely static pressure ratios."
+      ],
+      "reasoning": "Adiabatic intake efficiency penalizes total pressure destruction relative to ambient static conditions, properly registering zero efficiency upon total pressure collapse.",
+      "misconception": "Assuming that any metric using a total-to-total pressure ratio (\\epsilon_d) is a universally foolproof indicator of aerodynamic performance.",
+      "rubric": {
+        "2": "Identifies the flaw in total-to-total ratio and explains how adiabatic efficiency uses static ambient reference to accurately measure zero-efficiency states.",
+        "1": "Identifies that Ram efficiency is deceptive but fails to explain the mathematical formulation of adiabatic efficiency.",
+        "0": "Defends Ram efficiency as always accurate or provides an irrelevant alternative metric."
+      },
+      "hints": [
+        "Consider what happens to the total pressure if all kinetic energy is dissipated inside the intake.",
+        "Look at the baseline reference pressure. What happens when stagnation pressure drops to ambient static pressure?"
+      ],
+      "source_pages": "206",
+      "status": "SUPPORTED"
+    },
+    {
+      "id": "Q_D2",
+      "tier": "Diagnostic",
+      "difficulty": 2,
+      "question": "During subcritical operation of a supersonic external compression intake, what causes additive drag (D_a) to become positive?",
+      "correct_answer": "The engine demands less corrected mass flow than the intake captures, causing spillage (\\varphi_d < 1). The spilled air accelerates around the cowl lip, creating local static pressures greater than ambient (p > p_0).",
+      "incorrect_answers": [
+        "The normal shock wave is swallowed deep into the intake, creating supersonic friction drag along the internal walls.",
+        "The engine demands a higher mass flow, creating a vacuum effect that pulls the aircraft backward."
+      ],
+      "reasoning": "In subcritical operation, excess air must be rejected. The terminal normal shock moves outside the cowl, generating supersonic spillage. The pressure imbalance on the pre-entry streamline boundaries causes positive additive drag.",
+      "misconception": "Believing that subcritical operation means the intake is swallowing more air, which would pull the shock inside.",
+      "rubric": {
+        "2": "Correctly states the shock moves outside, spillage occurs, and identifies the pressure imbalance (p > p_0) causing additive drag.",
+        "1": "Identifies spillage or shock displacement but fails to connect it physically to the pressure buildup causing drag.",
+        "0": "Assumes the shock moves deeper inside the intake or confuses subcritical with supercritical."
+      },
+      "hints": [
+        "Think about where the excess air goes when the engine 'refuses' part of the incoming mass flow.",
+        "Consider the pressure of the air that is forced to divert around the outside of the engine lip."
+      ],
+      "source_pages": "208, 209",
+      "status": "SUPPORTED"
+    },
+    {
+      "id": "Q_D3",
+      "tier": "Diagnostic",
+      "difficulty": 3,
+      "question": "What sequence of fluid dynamic events causes an internal-compression supersonic intake (Kantrowitz-Donaldson) to unstart (disinnesco) when the engine throttle is retarded?",
+      "correct_answer": "Retarding the throttle lowers the engine's corrected mass flow demand. Because the intake has a fixed convergent throat, it cannot swallow the reduced flow, forcing the normal shock upstream and completely out of the cowl lip.",
+      "incorrect_answers": [
+        "Retarding the throttle increases the internal Mach number, causing the normal shock to hit the compressor face and stall the engine.",
+        "The reduced fuel flow causes the intake temperature to drop, freezing the boundary layer and separating the supersonic flow."
+      ],
+      "reasoning": "Internal intakes have strict area ratios (A_t/A_i). A drop in demanded corrected mass flow chokes the flow, breaking the steady internal supersonic solution and ejecting the shock.",
+      "misconception": "Assuming internal compression intakes can smoothly adapt to lower mass flows by simply slowing down internal velocities without expelling the shock.",
+      "rubric": {
+        "2": "Traces throttle reduction to lower corrected mass flow, explains the throat area constraint, and details the forward expulsion of the shock.",
+        "1": "Recognizes unstart is triggered by throttle reduction but misses the geometric throat constraint mechanics.",
+        "0": "Claims the intake adapts without unstarting or suggests the shock moves further downstream."
+      },
+      "hints": [
+        "What happens to the corrected mass flow demanded by the engine when you pull back the throttle?",
+        "Can a fixed-geometry convergent throat physically adapt to a mass flow lower than its sonic choking limit?"
+      ],
+      "source_pages": "224, 225, 228",
+      "status": "SUPPORTED"
+    },
+    {
+      "id": "Q_R1",
+      "tier": "Remedial",
+      "difficulty": 1,
+      "question": "If an intake is operating with a mass flow ratio (\\varphi_d) of less than 1, what is physically happening to the stream tube of air approaching the engine?",
+      "correct_answer": "The intake is capturing less air mass than its geometric inlet area would theoretically allow, meaning the excess air is being spilled or rejected around the outside of the cowl.",
+      "incorrect_answers": [
+        "The air inside the duct is expanding to supersonic speeds, lowering its density.",
+        "The engine is burning a fuel-rich mixture, requiring less air for combustion."
+      ],
+      "reasoning": "\\varphi_d is the ratio of captured mass flow to the theoretical maximum. A value less than 1 directly signifies mass flow rejection (spillage).",
+      "misconception": "Confusing mass flow ratio with thermodynamic density changes or internal combustion mixtures.",
+      "rubric": {
+        "2": "Correctly defines \\varphi_d < 1 as capturing less air than the geometric maximum, resulting in spillage.",
+        "1": "Mentions capturing less air but doesn't explicitly identify spillage/rejection.",
+        "0": "Incorrectly links \\varphi_d to combustion or internal density expansion."
+      },
+      "hints": [
+        "Think of \\varphi_d as a percentage of the intake's physical 'mouth' area being utilized.",
+        "If you try to force 100kg of air through an opening but only 80kg goes in, what happens to the remaining 20kg?"
+      ],
+      "source_pages": "200, 208",
+      "status": "SUPPORTED"
+    },
+    {
+      "id": "Q_R2",
+      "tier": "Remedial",
+      "difficulty": 2,
+      "question": "During supercritical operation, what happens to the normal shock wave and the total pressure recovery (\\epsilon_d) of an external compression intake?",
+      "correct_answer": "The normal shock is swallowed downstream into the divergent diffuser section. The Mach number increases before the shock, resulting in a stronger shock and a severe penalty/drop in total pressure recovery (\\epsilon_d).",
+      "incorrect_answers": [
+        "The shock is pushed completely outside the intake, improving total pressure recovery.",
+        "The flow becomes completely subsonic, eliminating the shock wave and maximizing pressure recovery."
+      ],
+      "reasoning": "Supercritical operation occurs when engine demand exceeds the critical matching point, pulling the shock inward where higher Mach numbers cause larger entropy increases.",
+      "misconception": "Assuming 'supercritical' means optimal or highest efficiency, rather than a state of increased losses.",
+      "rubric": {
+        "2": "Identifies the shock being swallowed and correctly connects it to a drop in total pressure recovery.",
+        "1": "Identifies shock location but fails to mention the penalty to pressure recovery.",
+        "0": "Claims supercritical operation improves pressure recovery or expels the shock."
+      },
+      "hints": [
+        "If subcritical pushes the shock out, what does supercritical do to the shock position?",
+        "Does a shock wave occurring at a higher Mach number inside a diverging duct help or hurt your total pressure?"
+      ],
+      "source_pages": "NEEDS_REVIEW",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "id": "Q_A1",
+      "tier": "Advanced",
+      "difficulty": 3,
+      "question": "How do variable geometry features (e.g., translating spikes or variable ramps) prevent the unstart condition in internal compression intakes during off-design operation?",
+      "correct_answer": "Variable geometry allows the intake to physically alter its throat area (A_t) or the capture area to match the changing corrected mass flow demands of the engine across different Mach numbers, preventing the throat from choking prematurely.",
+      "incorrect_answers": [
+        "They inject fuel ahead of the shock wave to increase the local temperature and speed of sound.",
+        "They intentionally stall the compressor to reduce the engine's mass flow demand to zero."
+      ],
+      "reasoning": "Since fixed-geometry Kantrowitz-Donaldson intakes unstart due to an inflexible throat area constraint at lower mass flow demands, mechanically altering the geometry maintains the required A_t/A_i ratio.",
+      "misconception": "Believing unstart can be solved purely by engine throttle management without physically changing the aerodynamic shape of the intake.",
+      "rubric": {
+        "2": "Explains that variable geometry alters the throat/capture area to maintain flow matching and prevent premature choking.",
+        "1": "Mentions moving parts but fails to specifically link them to throat area (A_t) or corrected mass flow matching.",
+        "0": "Suggests completely unrelated mechanisms like pre-burning or stalling."
+      },
+      "hints": [
+        "Why did the Kantrowitz-Donaldson intake fail when mass flow dropped? It lacked the ability to change something physical.",
+        "How would changing the physical size of the internal throat help when the engine demands less air?"
+      ],
+      "source_pages": "NEEDS_REVIEW",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "id": "Q_A2",
+      "tier": "Advanced",
+      "difficulty": 3,
+      "question": "In a single-spool turbojet operating off-design at a constant flight Mach number, how does advancing the throttle (increasing T_3^0) affect the intake's operating regime?",
+      "correct_answer": "Advancing the throttle increases T_3^0, shifting the compressor operating point up its working line to higher corrected mass flows. This increased demand pulls the intake from a subcritical state toward critical operation.",
+      "incorrect_answers": [
+        "Increasing temperature decreases engine mass flow demand, pushing the intake further into the subcritical unstarted regime.",
+        "Throttle changes only affect the exhaust nozzle; the intake regime is strictly locked to the flight Mach number."
+      ],
+      "reasoning": "Engine corrected mass flow and intake matching are coupled. Higher TIT (T_3^0) requires higher compressor speeds and flow along the working line, which the intake must supply.",
+      "misconception": "Failing to connect thermodynamic cycle changes in the combustion chamber to aerodynamic matching at the inlet face.",
+      "rubric": {
+        "2": "Links throttle increase to higher corrected mass flow on the working line, concluding the intake moves toward critical.",
+        "1": "Correctly states the intake moves toward critical but omits the working line/corrected mass flow connection.",
+        "0": "Claims throttle changes have no effect on the intake or cause it to move subcritical."
+      },
+      "hints": [
+        "When you increase fuel and turbine temperature, what happens to the compressor's rotational speed and mass flow?",
+        "If the engine suddenly wants more air, will a subcritical intake spill more air or less air?"
+      ],
+      "source_pages": "208, 309, 310",
+      "status": "SUPPORTED"
+    },
+    {
+      "id": "Q_B1",
+      "tier": "Boss",
+      "difficulty": 1,
+      "question": "A supersonic intake is operating in subcritical mode, spilling excess air. Why does this spillage result in a positive additive drag penalty on the aircraft, rather than simply meaning 'less air for thrust'?",
+      "correct_answer": "The spilled air does not just disappear; it is forced to divert and accelerate around the external cowl lip. This creates an area of high static pressure (p > p_0) on the pre-entry streamtube boundaries, which pushes against the aircraft's direction of flight.",
+      "incorrect_answers": [
+        "The spilled air creates turbulent boundary layers that scrape along the aircraft wings.",
+        "Spillage directly reduces the stream force at the exit nozzle, but creates no new external aerodynamic forces."
+      ],
+      "reasoning": "Additive drag is the integral of pressure forces on the captured streamtube. When flow is rejected (spillage), it decelerates before the lip and accelerates around it, creating a forward-facing pressure differential.",
+      "misconception": "Viewing spillage purely as an internal performance loss rather than an external aerodynamic pressure force generation.",
+      "rubric": {
+        "2": "Explicitly details the diversion of air around the lip and the resulting high static pressure (p > p_0) on the streamtube.",
+        "1": "Mentions air hitting the cowl but fails to specify the static pressure mechanism.",
+        "0": "Attributes the drag to friction, wings, or entirely internal thrust losses."
+      },
+      "hints": [
+        "Don't just think about the air that enters the engine. Track the path of the air that doesn't fit.",
+        "What happens to the pressure of a supersonic flow when it piles up and spills around a physical barrier?"
+      ],
+      "source_pages": "208, 209",
+      "status": "SUPPORTED"
+    },
+    {
+      "id": "Q_B2",
+      "tier": "Boss",
+      "difficulty": 2,
+      "question": "Why is a perfectly designed internal-compression supersonic intake fundamentally incapable of adapting to a reduced engine corrected mass flow demand without unstarting?",
+      "correct_answer": "It relies on a fixed convergent-divergent geometry with a strict throat area (A_t) optimized for a specific design Mach number. It physically cannot alter its throat to pass the reduced mass flow at required sonic conditions, forcing a breakdown.",
+      "incorrect_answers": [
+        "The internal friction becomes too high at low mass flows, causing the boundary layer to stall entirely.",
+        "The external cowl lip is too sharp, causing immediate flow separation when the internal pressure drops."
+      ],
+      "reasoning": "Kantrowitz-Donaldson designs require a specific A_t/A_i ratio to start and run. A drop in engine mass demand violates the continuity equation for that fixed throat area, choking it prematurely and forcing the shock out.",
+      "misconception": "Believing an internal supersonic intake can indefinitely ingest lower mass flows by smoothly slowing down the internal Mach numbers.",
+      "rubric": {
+        "2": "Identifies the fixed convergent-divergent geometry and the strict throat area (A_t) constraint preventing adaptation.",
+        "1": "Mentions fixed geometry but doesn't explain the choking limit at the throat.",
+        "0": "Blames boundary layer friction or external cowl shape."
+      },
+      "hints": [
+        "Focus on the physical shape of the narrowest part of the intake.",
+        "Can a rigid metal duct shrink its throat size when the engine asks for less air?"
+      ],
+      "source_pages": "224, 228",
+      "status": "SUPPORTED"
+    },
+    {
+      "id": "Q_B3",
+      "tier": "Boss",
+      "difficulty": 3,
+      "question": "Once an internal-compression intake completely unstarts due to an engine throttle reduction, what specific flow pattern does it revert to, and how does this impact Ram efficiency (\\epsilon_d)?",
+      "correct_answer": "The intake reverts to a high-loss external normal shock pattern (Pitot-like behavior) sitting ahead of the cowl. This single strong normal shock causes massive total pressure destruction, severely degrading Ram efficiency (\\epsilon_d).",
+      "incorrect_answers": [
+        "The flow becomes perfectly subsonic internally with no shocks, slightly increasing \\epsilon_d but reducing thrust.",
+        "A series of weak oblique shocks form externally, maintaining \\epsilon_d but drastically increasing aircraft drag."
+      ],
+      "reasoning": "Unstarting ejects the internal shock structure, replacing the efficient multi-shock or isentropic compression with a single, highly inefficient bow/normal shock in front of the inlet (like a simple Pitot tube at supersonic speeds).",
+      "misconception": "Assuming that an unstarted intake simply acts like a subsonic inlet, ignoring the massive entropy rise of a detached normal bow shock at supersonic flight speeds.",
+      "rubric": {
+        "2": "Correctly describes the reversion to a Pitot-like external normal shock and the subsequent massive degradation in \\epsilon_d.",
+        "1": "Mentions the shock moves outside or that \\epsilon_d drops, but does not identify the Pitot-like normal shock behavior.",
+        "0": "Claims \\epsilon_d improves or that shocks completely disappear."
+      },
+      "hints": [
+        "What does the intake look like to the supersonic air once the shock is pushed completely outside the lip?",
+        "Think of the simplest, least efficient type of supersonic intake (used on early jets) that relies on one big shock."
+      ],
+      "source_pages": "206, 225, 228",
+      "status": "SUPPORTED"
+    }
+  ]
+}
