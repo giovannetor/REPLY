@@ -11,7 +11,7 @@ export function readAiConfig(env: Record<string, string | undefined>) {
   return {
     apiKey: env.AI_EVALUATION_API_KEY?.trim() || env.GEMINI_API_KEY?.trim() || '',
     endpoint: env.AI_EVALUATION_URL?.trim() || GEMINI_ENDPOINT,
-    model: env.AI_EVALUATION_MODEL?.trim() || 'gemini-2.5-flash',
+    model: env.AI_EVALUATION_MODEL?.trim() || 'gemini-3.5-flash-lite',
     timeoutMs: positiveNumber(env.AI_EVALUATION_TIMEOUT_MS, 20_000),
   };
 }

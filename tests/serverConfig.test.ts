@@ -4,7 +4,7 @@ import { GEMINI_ENDPOINT, readAiConfig } from '../server/config';
 describe('Gemini server configuration', () => {
   test('defaults to Google OpenAI compatibility without inventing credentials', () => {
     expect(readAiConfig({})).toEqual({
-      apiKey: '', endpoint: GEMINI_ENDPOINT, model: 'gemini-2.5-flash', timeoutMs: 20_000,
+      apiKey: '', endpoint: GEMINI_ENDPOINT, model: 'gemini-3.5-flash-lite', timeoutMs: 20_000,
     });
   });
 
