@@ -60,6 +60,7 @@ import {
 import { BossScene } from './game/BossScene';
 import { DungeonScene } from './game/DungeonScene';
 import { gameEvents } from './game/events';
+import { CourseHome } from './ui/CourseHome';
 import { AppUI, type ResultChallengeView } from './ui/AppUI';
 import { ChallengePanel } from './ui/ChallengePanel';
 import {
@@ -87,6 +88,7 @@ class BossFightApp {
   private readonly evaluationSetup: EvaluationSetup = createEvaluationProvider();
   private readonly evaluator: EvaluationProvider = this.evaluationSetup.provider;
   private readonly ui: AppUI;
+  private readonly home: CourseHome;
   private readonly challengePanel: ChallengePanel;
   private readonly diagnosticPanel: DiagnosticPanel;
 
@@ -138,6 +140,8 @@ class BossFightApp {
     );
     this.ui.setSkills(this.skillStates, MOTORI_CONCEPTS);
     this.ui.showStart();
+    this.home = new CourseHome(() => this.ui.showStart());
+    this.home.show();
     this.bindGameEvents();
   }
 

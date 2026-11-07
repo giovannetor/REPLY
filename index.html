@@ -77,10 +77,202 @@
       <div id="toast" class="toast is-hidden" role="status"></div>
 
       <main id="overlay-root" class="overlay-root">
+        <section
+          id="home-screen"
+          class="screen home-screen"
+          aria-labelledby="home-title"
+        >
+          <div class="home-shell">
+            <header class="home-nav">
+              <a class="home-logo" href="/" aria-label="Poliquest home"
+                ><span class="pixel-mark">✦</span> POLIQUEST<span
+                  class="home-subbrand"
+                  >BOSSFIGHT AI</span
+                ></a
+              ><span class="connection-pill"
+                ><i></i> COURSE HANGAR / LOCAL DEMO</span
+              ><span class="pilot-avatar"
+                ><img src="/art/astronaut.svg" alt="Your astronaut" /> CADET
+                01</span
+              >
+            </header>
+            <div class="home-hero">
+              <div class="hero-copy">
+                <p class="eyebrow">YOUR KNOWLEDGE. A NEW FRONTIER.</p>
+                <h1 id="home-title">
+                  Small steps.<br /><span>Giant leaps.</span>
+                </h1>
+                <p class="hero-description">
+                  Turn your next study session into a mission.<br />Explore
+                  concepts, unlock doors, face the final boss.
+                </p>
+                <a href="#course-library" class="btn btn-primary hero-cta"
+                  >Explore your courses <span aria-hidden="true">↗</span></a
+                >
+                <p class="hero-footnote">
+                  01 SEEDED MISSION <span> / </span> AI-GUIDED LEARNING
+                </p>
+              </div>
+              <div class="space-illustration" aria-hidden="true">
+                <div class="planet-orbit"></div>
+                <div class="pixel-planet"><div class="planet-grid"></div></div>
+                <img class="hero-astronaut" src="/art/astronaut.svg" alt="" />
+                <div class="coordinate coordinate-a">SECTOR 01 / KNOWLEDGE</div>
+                <div class="coordinate coordinate-b">
+                  NEXT OBJECTIVE<br /><strong>THE REGISTRAR</strong>
+                </div>
+                <span class="space-spark spark-a">＋</span
+                ><span class="space-spark spark-b">✦</span>
+              </div>
+            </div>
+            <section
+              id="course-library"
+              class="course-library"
+              aria-labelledby="library-title"
+            >
+              <div class="library-heading">
+                <div>
+                  <p class="eyebrow">MISSION CONTROL</p>
+                  <h2 id="library-title">
+                    Your course hangar
+                    <span id="library-count">1 course in your hangar</span>
+                  </h2>
+                </div>
+                <button id="create-course" class="btn btn-ghost" type="button">
+                  ＋ Create new course
+                </button>
+              </div>
+              <p id="library-notice" class="library-notice" role="status"></p>
+              <div id="course-grid" class="course-grid">
+                <article class="course-card seeded-course">
+                  <div class="course-art engine-art" aria-hidden="true">
+                    <span class="art-label">SECTOR / 01</span>
+                    <div class="pixel-engine">
+                      <span></span><span></span><span></span><span></span>
+                    </div>
+                    <span class="art-coordinates"
+                      >45° N · PROPULSION ARCHIVE</span
+                    >
+                  </div>
+                  <div class="course-card-body">
+                    <div class="course-card-meta">
+                      <span class="badge playable-badge">● Playable</span
+                      ><span class="demo-label">SEEDED DEMO</span>
+                    </div>
+                    <h3>Motori per Aeromobili</h3>
+                    <p class="course-institution">Politecnico di Torino</p>
+                    <p class="course-description">
+                      Master stream force, supersonic intakes and combustor
+                      stability. Three doors. One final encounter.
+                    </p>
+                    <div class="course-tags">
+                      <span>3 concepts</span><span>3 boss phases</span
+                      ><span>AI evaluation</span>
+                    </div>
+                    <button
+                      id="play-seeded"
+                      class="btn btn-primary btn-wide"
+                      type="button"
+                    >
+                      Launch mission <span aria-hidden="true">→</span>
+                    </button>
+                  </div>
+                </article>
+                <div class="library-empty">
+                  <span class="empty-orbit" aria-hidden="true">＋</span>
+                  <h3>Your next mission starts here.</h3>
+                  <p>Create a course and bring your study materials aboard.</p>
+                  <span class="badge"
+                    >DRAFT → MATERIALS → CONTENT PACK → PLAY</span
+                  >
+                  <p class="fineprint">
+                    New courses are saved locally. Content generation is coming
+                    next; only the seeded demo is playable.
+                  </p>
+                </div>
+              </div>
+            </section>
+            <footer class="home-footer">
+              <span>POLIQUEST / LEARN. EXPLORE. CONQUER.</span
+              ><span>LOCAL DEMO · PROVISIONAL COURSE CONTENT</span>
+            </footer>
+          </div>
+        </section>
+        <dialog
+          id="course-dialog"
+          class="course-dialog"
+          aria-labelledby="create-title"
+        >
+          <form id="course-form">
+            <div class="dialog-header">
+              <p class="eyebrow">NEW MISSION / COURSE SETUP</p>
+              <h2 id="create-title">Chart a new course.</h2>
+              <p class="muted">
+                Save a course draft and its materials on this device.
+              </p>
+            </div>
+            <label class="field-label" for="course-title"
+              >Course title <span aria-hidden="true">*</span></label
+            ><input
+              id="course-title"
+              class="text-input"
+              required
+              maxlength="100"
+              placeholder="e.g. Orbital Mechanics"
+            /><label class="field-label" for="course-description"
+              >Short description <span aria-hidden="true">*</span></label
+            ><textarea
+              id="course-description"
+              class="text-input"
+              required
+              maxlength="500"
+              rows="3"
+              placeholder="What will you explore?"
+            ></textarea
+            ><label class="field-label" for="course-institution"
+              >Institution / professor <span>(optional)</span></label
+            ><input
+              id="course-institution"
+              class="text-input"
+              maxlength="160"
+              placeholder="University or teaching team"
+            /><label class="material-drop" for="course-materials"
+              ><span aria-hidden="true">↑</span
+              ><strong>Bring your materials aboard</strong
+              ><small
+                >PDF, TXT, MD, PPT(X), DOC(X) · up to 10 files / 20 MB
+                total</small
+              ><input
+                id="course-materials"
+                type="file"
+                multiple
+                accept=".pdf,.txt,.md,.ppt,.pptx,.doc,.docx"
+            /></label>
+            <p id="material-selection" class="material-selection">
+              No materials selected. You can save a draft without files.
+            </p>
+            <p class="course-pending">
+              Materials stay in this browser. They are not sent to AI or parsed.
+              Content generation is coming next; a new course cannot be played
+              yet.
+            </p>
+            <p id="course-save-status" class="inline-status" role="status"></p>
+            <div class="dialog-actions">
+              <button id="course-cancel" type="button" class="btn btn-ghost">
+                Cancel</button
+              ><button id="course-save" type="submit" class="btn btn-primary">
+                Save course
+              </button>
+            </div>
+          </form>
+        </dialog>
         <section id="start-screen" class="screen start-screen">
           <div class="ambient ambient-a" aria-hidden="true"></div>
           <div class="ambient ambient-b" aria-hidden="true"></div>
           <div class="panel start-panel">
+            <button id="course-home-back" class="link-btn" type="button">
+              ← Course hangar
+            </button>
             <div class="brand-mark">
               <span class="brand-rune">✦</span> POLIQUEST
               <span class="brand-sub">/ BossFight AI</span>
