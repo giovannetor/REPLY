@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { HttpEvaluationProvider } from '../src/evaluation/httpEvaluator';
 import { EvaluationProviderError } from '../src/evaluation/types';
 import {
@@ -17,6 +17,20 @@ function pendingUntilAborted(): typeof fetch {
 }
 
 describe('HTTP evaluation provider', () => {
+  test('calls default browser fetch with the global receiver', async () => {
+    const browserFetch = vi.fn(function (this: unknown) {
+      if (this !== globalThis) throw new TypeError('Illegal invocation');
+      return Promise.resolve(jsonResponse(validEvaluationResult));
+    });
+    vi.stubGlobal('fetch', browserFetch);
+    try {
+      const provider = new HttpEvaluationProvider({ endpoint: '/api/evaluate' });
+      expect((await provider.evaluate(testRequest)).evaluator).toBe('ai');
+      expect(browserFetch).toHaveBeenCalledOnce();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
   test('posts the request and validates a labelled server response', async () => {
     let capturedUrl = '';
     let capturedInit: RequestInit | undefined;

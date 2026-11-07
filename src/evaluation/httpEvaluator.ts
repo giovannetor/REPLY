@@ -28,7 +28,8 @@ export class HttpEvaluationProvider implements EvaluationProvider {
   constructor(options: HttpEvaluationProviderOptions) {
     this.endpoint = options.endpoint;
     this.timeoutMs = options.timeoutMs ?? 8_000;
-    this.fetchImpl = options.fetchImpl ?? fetch;
+    // Browser fetch requires Window as its receiver when stored as a method.
+    this.fetchImpl = options.fetchImpl ?? globalThis.fetch.bind(globalThis);
   }
 
   async evaluate(

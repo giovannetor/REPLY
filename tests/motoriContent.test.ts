@@ -70,7 +70,7 @@ describe('Motori content consistency', () => {
 
     for (const ref of c2) {
       expect(ref.conceptId).toBe('C2');
-      expect(ref.challengeId.startsWith('c2-')).toBe(true);
+      expect(getLearningChallenge(ref.challengeId)?.conceptId).toBe('C2');
       expect(validateChallenge(MOCK_CHALLENGES[ref.challengeId]).ok).toBe(true);
       const learning = getLearningChallenge(ref.challengeId);
       expect(learning?.kind).toBe(ref.kind);
@@ -83,7 +83,7 @@ describe('Motori content consistency', () => {
     expect(ADAPTIVE_BANKS.C5).toBeUndefined();
   });
 
-  test('diagnostics cover C1-C3 with provisional rubrics and missing answer sources', () => {
+  test('diagnostics cover C1-C3 with provisional rubrics and honest source status', () => {
     expect(DIAGNOSTIC_QUESTIONS).toHaveLength(3);
     expect(DIAGNOSTIC_QUESTIONS.map((question) => question.conceptId)).toEqual([
       'C1',
@@ -108,18 +108,21 @@ describe('Motori content consistency', () => {
       expect(rubric).toBeDefined();
       expect(rubric?.conceptId).toBe(question.conceptId);
 
-      expect(question.sourceRefs.map((ref) => ref.id)).toContain(FRAMEWORK_SOURCE.id);
-      expect(question.answerSourceRefs).toHaveLength(0);
-      expect(describeSourceStatus(question.answerSourceRefs, 'answer').isMissing).toBe(
-        true,
-      );
+      if (question.courseContent) {
+        expect(question.id).toBe('Q_D2');
+        expect(question.courseContent.independentlyVerified).toBe(false);
+        expect(describeSourceStatus(question.answerSourceRefs, 'answer').tone).toBe('unverified');
+      } else {
+        expect(question.sourceRefs.map((ref) => ref.id)).toContain(FRAMEWORK_SOURCE.id);
+        expect(question.answerSourceRefs).toHaveLength(0);
+      }
     }
   });
 
   test('every rubric is provisional, weighted and internally consistent', () => {
     for (const rubric of Object.values(MOTORI_RUBRICS)) {
       expect(rubric.provisional).toBe(true);
-      expect(rubric.passThreshold).toBe(0.6);
+      expect(rubric.passThreshold).toBe(rubric.id === 'Q_D2-rubric' ? 1 : 0.6);
       expect(rubric.clarificationPrompt.length).toBeGreaterThan(0);
       expect(rubric.criteria.length).toBeGreaterThan(0);
 
@@ -170,11 +173,14 @@ describe('Motori content consistency', () => {
       expect(rubric).toBeDefined();
       expect(rubric?.conceptId).toBe(learning.conceptId);
 
-      expect(learning.sourceRefs.map((ref) => ref.id)).toContain(FRAMEWORK_SOURCE.id);
-      expect(learning.answerSourceRefs).toHaveLength(0);
-      expect(describeSourceStatus(learning.answerSourceRefs, 'answer').tone).toBe(
-        'missing',
-      );
+      if (learning.courseContent) {
+        expect(learning.courseContent.independentlyVerified).toBe(false);
+        expect(describeSourceStatus(learning.answerSourceRefs, 'answer').tone).toBe('unverified');
+      } else {
+        expect(learning.sourceRefs.map((ref) => ref.id)).toContain(FRAMEWORK_SOURCE.id);
+        expect(learning.answerSourceRefs).toHaveLength(0);
+        expect(describeSourceStatus(learning.answerSourceRefs, 'answer').tone).toBe('missing');
+      }
       expect(['C4', 'C5']).not.toContain(learning.conceptId);
     }
   });
@@ -212,7 +218,7 @@ describe('C2 adaptive flow with the authored content', () => {
       correctOptionId: question.correctOptionId,
       selectedOptionId: question.correctOptionId,
       explanation:
-        'The terminal shock moves upstream, the intake spills part of the captured stream tube, additive drag rises, and the shock can be expelled, causing unstart.',
+        'The terminal shock moves upstream outside the cowl as engine demand falls. Excess air spills, and pressure above ambient creates a pressure imbalance causing positive additive drag.',
       rubric,
       ...overrides,
     };
@@ -239,7 +245,7 @@ describe('C2 adaptive flow with the authored content', () => {
     expect(evaluation.reasoning).toBe('sound');
     expect(route.kind).toBe('advanced');
     expect(route.conceptId).toBe('C2');
-    expect(routeChallengeId(route)).toBe('c2-advanced-intake-matching');
+    expect(routeChallengeId(route)).toBe('Q_A2');
   });
 
   test('correct answer plus flawed reasoning routes to the C2 counterexample', () => {
@@ -258,12 +264,12 @@ describe('C2 adaptive flow with the authored content', () => {
 
   test('wrong answer routes to the C2 remedial challenge', () => {
     const { evaluation, route } = routeFor(
-      c2Request({ selectedOptionId: 'recovery-improves' }),
+      c2Request({ selectedOptionId: 'distractor-1' }),
     );
     expect(evaluation.verdict).toBe('incorrect');
     expect(route.kind).toBe('remedial');
     expect(route.conceptId).toBe('C2');
-    expect(routeChallengeId(route)).toBe('c2-remedial-mass-flow');
+    expect(routeChallengeId(route)).toBe('Q_R1');
   });
 
   test('an unclear answer asks for clarification, then falls back to remedial', () => {

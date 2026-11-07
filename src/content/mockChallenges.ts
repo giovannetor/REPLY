@@ -9,7 +9,10 @@
  * These are plain data objects, not code. Every provider response is validated
  * by validateChallenge before it reaches the UI.
  */
+import { C2_CONTENT_PACK } from './coursePackAdapter';
+
 export const MOCK_CHALLENGES: Record<string, unknown> = {
+  ...C2_CONTENT_PACK.challenges,
   'c1-stream-force': {
     id: 'c1-stream-force',
     type: 'multiple-choice',

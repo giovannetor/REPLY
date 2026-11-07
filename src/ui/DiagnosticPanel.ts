@@ -131,7 +131,7 @@ export class DiagnosticPanel {
     this.phase = 'answering';
     this.clarificationMode = false;
 
-    this.progress.textContent = `Diagnostic · ${index + 1} / ${total}`;
+    this.progress.textContent = `Diagnostic · ${index + 1} / ${total}${question.courseContent ? ` · ${question.id}` : ''}`;
     this.conceptTitle.textContent = `${concept.id} · ${concept.title}`;
     this.badge.textContent =
       skill.evidenceCount === 0
@@ -139,6 +139,9 @@ export class DiagnosticPanel {
         : `Provisional skill: ${formatMastery(skill)}`;
 
     this.prompt.textContent = question.prompt;
+    if (question.courseContent) {
+      this.badge.textContent = `Pack: ${question.courseContent.question.status} · provisional / unverified`;
+    }
     this.hint.textContent = question.explanationHint ?? question.explanationPrompt;
     this.explanation.value = '';
     this.clarificationInput.value = '';
