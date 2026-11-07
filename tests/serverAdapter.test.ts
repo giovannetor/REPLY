@@ -208,7 +208,15 @@ describe('server-side AI evaluation adapter', () => {
 
     expect(result.status).toBe(502);
     expect(result.body.error).toBe('ai_unreachable');
-    expect(String(result.body.details)).toContain('socket hang up');
+    expect(result.body.details).toBeUndefined();
+  });
+
+  test('never reflects credentials embedded in a transport error', async () => {
+    const result = await evaluateWithAi(testRequest, config(async () => {
+      throw new Error('Failed Authorization: Bearer test-secret');
+    }));
+    expect(result.status).toBe(502);
+    expect(JSON.stringify(result.body)).not.toContain('test-secret');
   });
 
   test('reports a provider timeout as a 504', async () => {

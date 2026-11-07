@@ -60,6 +60,29 @@ export interface DiagnosticQuestion {
   rubricId: string;
   sourceRefs: SourceReference[];
   answerSourceRefs: SourceReference[];
+  courseContent?: CourseContentMetadata;
+}
+
+/** Original pack data retained without upgrading its validation claims. */
+export interface CoursePackQuestion {
+  id: string;
+  tier: 'Diagnostic' | 'Remedial' | 'Advanced' | 'Boss';
+  difficulty: number;
+  question: string;
+  correct_answer: string;
+  incorrect_answers: string[];
+  reasoning: string;
+  misconception: string;
+  rubric: Record<'0' | '1' | '2', string>;
+  hints: string[];
+  source_pages: string;
+  status: 'SUPPORTED' | 'NEEDS_REVIEW';
+}
+
+export interface CourseContentMetadata {
+  sourceDocument: string;
+  question: CoursePackQuestion;
+  independentlyVerified: false;
 }
 
 export type ReasoningQuality = 'sound' | 'flawed' | 'insufficient';
@@ -89,6 +112,8 @@ export interface EvaluationRubric {
   passThreshold: number;
   provisional: boolean;
   clarificationPrompt: string;
+  scoringGuide?: Record<'0' | '1' | '2', string>;
+  misconception?: string;
 }
 
 export interface SkillEvidence {
@@ -146,4 +171,5 @@ export interface LearningChallenge {
   requiresExplanation: boolean;
   sourceRefs: SourceReference[];
   answerSourceRefs: SourceReference[];
+  courseContent?: CourseContentMetadata;
 }

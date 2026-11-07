@@ -31,7 +31,7 @@ describe('GameDirector adaptive routing', () => {
     expect(result.kind).toBe('advanced');
     expect(result.conceptId).toBe('C2');
     if (result.kind !== 'clarification') {
-      expect(result.challengeId).toBe('c2-advanced-intake-matching');
+      expect(result.challengeId).toBe('Q_A2');
     }
   });
 
@@ -56,7 +56,7 @@ describe('GameDirector adaptive routing', () => {
     expect(result.kind).toBe('remedial');
     expect(result.conceptId).toBe('C2');
     if (result.kind !== 'clarification') {
-      expect(result.challengeId).toBe('c2-remedial-mass-flow');
+      expect(result.challengeId).toBe('Q_R1');
     }
   });
 
@@ -116,7 +116,7 @@ describe('GameDirector adaptive routing', () => {
       const result = route(evaluation, evaluation.verdict === 'correct');
       expect(result.conceptId).toBe('C2');
       if (result.kind !== 'clarification') {
-        expect(result.challengeId.startsWith('c2-')).toBe(true);
+        expect(ADAPTIVE_BANKS.C2?.find((ref) => ref.challengeId === result.challengeId)?.conceptId).toBe('C2');
       }
     }
   });
