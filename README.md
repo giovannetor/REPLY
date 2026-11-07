@@ -1,4 +1,8 @@
-# BossFight AI — Motori per Aeromobili
+# PoliQuest — Motori per Aeromobili
+
+![PoliQuest official logo](public/brand/poliquest-logo.webp)
+
+**PoliQuest** is the public-facing game brand. `BossFight AI` remains the historical/internal prototype name in some technical modules.
 
 An adaptive educational dungeon prototype for the **Motori per Aeromobili** assessment
 framework. The existing Vite + Phaser BossFight AI game is preserved: the start screen,

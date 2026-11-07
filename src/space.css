@@ -11,8 +11,8 @@
   --cyan: #55e6fa;
   --violet: #a28afa;
   --pink: #ff71ce;
-  --display: 'Trebuchet MS', system-ui, sans-serif;
-  --body: Inter, 'Segoe UI', system-ui, sans-serif;
+  --display: "Trebuchet MS", system-ui, sans-serif;
+  --body: Inter, "Segoe UI", system-ui, sans-serif;
 }
 body {
   background:
@@ -20,7 +20,7 @@ body {
     radial-gradient(ellipse at 8% 85%, #102e46 0, transparent 45%), #060a1b;
 }
 body:before {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
@@ -362,17 +362,17 @@ textarea:focus-visible {
 .boss-companion {
   display: none;
 }
-.challenge-screen[data-mode='boss'] {
+.challenge-screen[data-mode="boss"] {
   background:
     radial-gradient(ellipse at 80% 50%, #30205466, transparent 70%), #060a1be8;
   backdrop-filter: blur(3px);
 }
-.challenge-screen[data-mode='boss'] .encounter-layout {
+.challenge-screen[data-mode="boss"] .encounter-layout {
   width: min(1200px, 100%);
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
 }
-.challenge-screen[data-mode='boss'] .boss-companion {
+.challenge-screen[data-mode="boss"] .boss-companion {
   display: flex;
   flex-direction: column;
   position: relative;
@@ -400,7 +400,7 @@ textarea:focus-visible {
   color: #7cf7cc;
 }
 .live-dot:before {
-  content: '●';
+  content: "●";
   margin-right: 5px;
 }
 .boss-companion > .badge {
@@ -536,13 +536,13 @@ textarea:focus-visible {
   .panel {
     padding: 24px;
   }
-  .challenge-screen[data-mode='boss'] .encounter-layout {
+  .challenge-screen[data-mode="boss"] .encounter-layout {
     display: flex;
     flex-direction: column-reverse;
     max-height: calc(100dvh - 32px);
     gap: 12px;
   }
-  .challenge-screen[data-mode='boss'] .boss-companion {
+  .challenge-screen[data-mode="boss"] .boss-companion {
     display: grid;
     grid-template-columns: 70px 1fr 1fr;
     gap: 6px 14px;
@@ -1291,4 +1291,54 @@ textarea:focus-visible {
 }
 .course-dialog {
   pointer-events: auto;
+}
+
+/* Official brand asset from PR #4; never substitute decorative mission art. */
+.official-logo {
+  object-fit: contain;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+.hud-logo {
+  width: 42px;
+  height: 38px;
+}
+.home-logo {
+  gap: 14px;
+  letter-spacing: 0.08em;
+}
+.home-logo > span {
+  position: relative;
+}
+.home-brand-logo {
+  width: 80px;
+  height: 72px;
+}
+.home-subbrand {
+  position: static;
+  display: block;
+  margin-top: 7px;
+}
+.brand-mark {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.briefing-logo {
+  width: 100px;
+  height: 90px;
+}
+@media (max-width: 600px) {
+  .home-brand-logo {
+    width: 64px;
+    height: 58px;
+  }
+  .home-logo {
+    gap: 10px;
+  }
+  .brand-mark .brand-sub {
+    display: inline;
+    margin: 0;
+  }
 }
