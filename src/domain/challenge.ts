@@ -61,7 +61,7 @@ export class ChallengeValidationError extends Error {
   }
 }
 
-const ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/;
+const ID_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/;
 const MAX_TITLE = 120;
 const MAX_PROMPT = 2_000;
 const MAX_EXPLANATION = 2_000;

@@ -273,7 +273,7 @@ class BossFightApp {
     const uncertain =
       evaluation.verdict === 'uncertain' || evaluation.confidence < 0.55;
 
-    if (uncertain && !clarificationTried) {
+    if (uncertain && !clarificationTried && selectedOptionId === question.correctOptionId) {
       this.pendingDiagnostic = { question, selectedOptionId, explanation };
       this.diagnosticPanel.showClarification(
         evaluation.clarificationQuestion ?? question.explanationPrompt,
