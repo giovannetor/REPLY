@@ -1,7 +1,7 @@
 # BossFight AI hackathon handoff — 7 November 2026
 
-Implementation is on local branch `codex/hackathon-ai-content`. Nothing was pushed to main
-or any remote. The dungeon scenes, CSS, HTML layout, original boss formats (including the
+Implementation is on branch `codex/hackathon-ai-content`, prepared for review against main.
+No changes have been merged into main. The dungeon scenes, CSS, HTML layout, original boss formats (including the
 sequence round), login scope and multiplayer scope are preserved.
 
 ## Audit and recovery
@@ -160,7 +160,7 @@ request from ever reaching the backend. A regression test now checks the fetch r
    against the original PDF before treating them as verified teaching material. Q_R2 and
    Q_A1 remain excluded pending review. C1/C3 and the counterexample/boss retain the existing
    authored-content warnings.
-3. **Deployment:** no deployment or remote push was requested/performed. For a hosted demo,
+3. **Deployment:** no deployment was performed. For a hosted demo,
    configure the backend/proxy and server-side secret before using the live AI label.
 4. Only C2 adapts; C4/C5 remain unassessed, as in the original. The existing 3/3 boss victory
    requirement, no persistence and Phaser bundle-size warning remain unchanged.
