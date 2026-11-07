@@ -158,21 +158,6 @@ export function renderCriteriaList(
   }
   container.append(list);
 
-  if (rubric.scoringGuide) {
-    for (const level of ['2', '1', '0'] as const) {
-      const guide = document.createElement('p');
-      guide.className = 'criteria-note';
-      guide.textContent = `Pack rubric ${level}/2: ${rubric.scoringGuide[level]}`;
-      container.append(guide);
-    }
-  }
-  if (rubric.misconception) {
-    const misconception = document.createElement('p');
-    misconception.className = 'criteria-note';
-    misconception.textContent = `Misconception to check: ${rubric.misconception}`;
-    container.append(misconception);
-  }
-
   if (missingIds.length > 0) {
     const missing = document.createElement('p');
     missing.className = 'criteria-note';

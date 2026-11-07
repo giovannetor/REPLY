@@ -38,7 +38,7 @@ function wait(ms: number, signal?: AbortSignal): Promise<void> {
  * loading states are real, and can fail once per challenge to exercise retry.
  */
 export class MockChallengeProvider implements ChallengeProvider {
-  readonly name = 'Local course archive (provisional)';
+  readonly name = 'Local mock archive';
   private readonly latencyMs: number;
   private readonly failFirstAttempt: boolean;
   private readonly failedOnce = new Set<string>();
